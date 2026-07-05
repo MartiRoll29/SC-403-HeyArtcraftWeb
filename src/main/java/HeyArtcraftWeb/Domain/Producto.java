@@ -16,6 +16,7 @@ public class Producto {
     private Integer id;
     private String nombre;
     private BigDecimal precio;
+    private String imagen;
 
     @ManyToOne
     @JoinColumn(name = "categoria_id")
@@ -41,7 +42,13 @@ public class Producto {
     public void setPrecio(BigDecimal precio) {
         this.precio = precio;
     }
+    public String getImagen() {
+        return imagen;
+    }
 
+    public void setImagen(String imagen) {
+        this.imagen = imagen;
+    }
     public Categoria getCategoria() {
         return categoria;
     }

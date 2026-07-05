@@ -17,7 +17,7 @@ public class CatalogoController {
         this.categoriaService = categoriaService;
     }
 
-    @GetMapping
+    @GetMapping("/listado")
     public String listado(Model model) {
         var categorias = categoriaService.getCategoriasConProductos();
         model.addAttribute("categorias", categorias);
