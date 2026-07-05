@@ -1,13 +1,13 @@
-package com.heyartcraft.heyartcraftweb;
+package HeyArtcraftWeb;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class HeyartcraftwebApplication {
+public class HeyArtcraftWebApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(HeyartcraftwebApplication.class, args);
+		SpringApplication.run(HeyArtcraftWebApplication.class, args);
 	}
 
 }
