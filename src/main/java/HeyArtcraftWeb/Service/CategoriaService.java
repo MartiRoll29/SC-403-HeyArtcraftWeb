@@ -9,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class CategoriaService {
-
     private final CategoriaRepository categoriaRepository;
 
     public CategoriaService(CategoriaRepository categoriaRepository) {
@@ -17,13 +16,17 @@ public class CategoriaService {
     }
 
     @Transactional(readOnly = true)
-    public List<Categoria> getCategorias() {
-        return categoriaRepository.findAll();
+    public List<Categoria> getCategoriasConProductos() {
+        return categoriaRepository.findAllWithProductos();
+    }
+
+    public Optional<Categoria> getCategoria(Integer id) {
+        return getCategoria(id);
     }
 
     @Transactional(readOnly = true)
-    public Optional<Categoria> getCategoria(Integer idCategoria) {
-        return categoriaRepository.findById(idCategoria);
+    public Optional<Categoria> getCategorias(Integer id) {
+        return categoriaRepository.findById(id);
     }
 
     @Transactional
@@ -32,7 +35,7 @@ public class CategoriaService {
     }
 
     @Transactional
-    public void delete(Integer idCategoria) {
-        categoriaRepository.deleteById(idCategoria);
+    public void delete(Integer id) {
+        categoriaRepository.deleteById(id);
     }
 }

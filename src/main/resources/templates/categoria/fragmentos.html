@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <body>
+        <!-- Agregar categoría -->
+        <section th:fragment="agregar">
+            <div class="d-flex justify-content-center my-3">
+                <button type="button" class="btn btn-success rounded-pill px-4"
+                        data-bs-toggle="modal" data-bs-target="#agregarCategoriaModal">
+                    <i class="fa-solid fa-plus"></i> [[#{categoria.agregar}]]
+                </button>
+            </div>
+
+            <div class="modal fade" id="agregarCategoriaModal" tabindex="-1">
+                <div class="modal-dialog">
+                    <div class="modal-content bg-dark text-light">
+                        <form th:action="@{/categoria/guardar}" th:object="${categoria}" method="post">
+                            <div class="modal-header bg-success text-white">
+                                <h5 class="modal-title">[[#{categoria.agregar}]]</h5>
+                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                                <label>[[#{categoria.nombre}]]</label>
+                                <input type="text" th:field="*{nombre}" class="form-control bg-dark text-light border-secondary" required/>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-outline-light">[[#{accion.guardar}]]</button>
+                                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">[[#{accion.cerrar}]]</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </body>
+</html>
