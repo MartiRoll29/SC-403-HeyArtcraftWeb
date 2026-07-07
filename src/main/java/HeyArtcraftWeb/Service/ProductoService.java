@@ -7,6 +7,7 @@ import HeyArtcraftWeb.Repository.ProductoRepository;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -59,12 +60,15 @@ public class ProductoService {
         productoRepository.save(producto);
     }
 
-    public void delete(Integer id) {
-        Producto producto = productoRepository.findById(id)
+    @Transactional
+    public void delete(Integer idProducto) {
+        if (!productoRepository.existsById(idProducto)) {
+            throw new IllegalArgumentException("El producto con ID " + idProducto + " no existe.");
+        }
+        Producto producto = productoRepository.findById(idProducto)
                 .orElseThrow(() -> new IllegalArgumentException("Producto no encontrado"));
-
-        // ✅ Eliminar el producto completo de la BD
-        productoRepository.delete(producto);
+        // Eliminar el registro de la BD
+        productoRepository.deleteById(idProducto);
     }
 
     @Transactional(readOnly = true)

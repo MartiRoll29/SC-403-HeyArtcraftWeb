@@ -44,6 +44,6 @@ public class ProductoController {
         }
         model.addAttribute("producto", productoOpt.get());
         model.addAttribute("categorias", categoriaService.getCategoriasConProductos());
-        return "catalogo/modifica";
+        return "catalogo/listado";
     }
 }
