@@ -9,31 +9,35 @@
 
     <!-- Contenedor principal -->
     <div class="container my-4">
-        <div th:each="c : ${categorias}" class="text-center mb-5">
+        <div th:each="c : ${categorias}" class="text-center mb-2">
             <!-- Título de categoría -->
             <h3 class="categoria-titulo" th:text="${c.nombre}"></h3>
             
             <!-- Productos -->
             <div class="d-flex flex-wrap gap-3 justify-content-center mt-3">
                 <div class="card producto-card" th:each="p : ${c.productos}">
-                    <div class="card-body text-center">
+                    <div class="card-body">
                         <img th:src="${p.imagen}" class="card-img-top producto-img" alt="Imagen producto"/>
                         <h5 class="card-title" th:text="${p.nombre}"></h5>
                     </div>
                 </div>
                 <!-- Botón agregar producto -->
-                <button type="button" class="btn btn-success rounded-circle"
-                        data-bs-toggle="modal" th:attr="data-bs-target='#agregarProducto__' + ${c.id}">
-                    <i class="fa-solid fa-plus"></i>
-                </button>
-                <section th:replace="~{catalogo/fragmentos :: eliminar}"/>
-                <hr class="categoria-divider">
+                <div class="d-flex align-items-center">
+                    <button type="button" class="btn btn-success rounded-circle"
+                            data-bs-toggle="modal" th:attr="data-bs-target='#agregarProducto__' + ${c.id}">
+                        <i class="fa-solid fa-plus"></i>
+                    </button>
+                </div>
+                <section th:replace="~{catalogo/fragmentos :: agregar_producto}"/>
+                <!-- Botón eliminar categoría -->
+                <section th:replace="~{catalogo/fragmentos :: eliminar_categoria}"/>
             </div>
+            <hr class="categoria-divider">
         </div>
     </div>
 
-    <!-- Botón agregar categoría -->
-    <section th:replace="~{catalogo/fragmentos :: agregar}"/>
+    <!-- Botón editar y agregar categoría -->
+    <section th:replace="~{catalogo/fragmentos :: agregar_categoria}"/>
 
     <!-- Footer -->
     <footer th:replace="~{general/fragmentos :: footer}"/>

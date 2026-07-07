@@ -28,28 +28,28 @@ public class ProductoController {
         model.addAttribute("productos", productos);
         model.addAttribute("categorias", categorias);
         model.addAttribute("producto", new Producto()); // 👈 necesario para el formulario
-        return "producto/listado";
+        return "catalogo/listado";
     }
     @PostMapping("/guardar")
     public String guardar(@ModelAttribute Producto producto, @RequestParam("categoriaId") Integer categoriaId) {
         productoService.save(producto, categoriaId);
-        return "redirect:/producto/listado";
+        return "redirect:/catalogo/listado";
     }
 
     @PostMapping("/eliminar")
     public String eliminar(@RequestParam("id") Integer id) {
         productoService.delete(id);
-        return "redirect:/producto/listado";
+        return "redirect:/catalogo/listado";
     }
 
     @GetMapping("/modificar/{id}")
     public String modificar(@PathVariable("id") Integer id, Model model) {
         Optional<Producto> productoOpt = Optional.ofNullable(productoService.getProducto(id));
         if (productoOpt.isEmpty()) {
-            return "redirect:/producto/listado";
+            return "redirect:/catalogo/listado";
         }
         model.addAttribute("producto", productoOpt.get());
         model.addAttribute("categorias", categoriaService.getCategoriasConProductos());
-        return "producto/modifica";
+        return "catalogo/modifica";
     }
 }

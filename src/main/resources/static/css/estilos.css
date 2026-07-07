@@ -10,7 +10,7 @@
 /* Bloque verde sólido encima */
 .wrapper .overlay {
     background-color: #4f4f35;
-    padding: 15px 30px;   
+    padding: 15px 50px;   
 }
 
 /* - Header - */
@@ -21,7 +21,7 @@
 /* - Footer - */
 .wrapper.footer {
   position: relative;
-  height: 200px; /* ajusta según tu diseño */
+  height: 200px; 
 }
 
 /* Fondo de hojas solo arriba */
@@ -39,7 +39,7 @@
   height: 120px;
   display: flex;
   align-items: center;
-  padding: 0 110px;
+  padding: 0 150px;
 }
 
 /* Logo circular */
@@ -56,7 +56,7 @@
 .categoria-titulo {
   color:#3a2417;
   font-weight: bold;
-  border-bottom: 2px solid #3a2417;
+  border-bottom: 3px solid #3a2417;
   padding-bottom: 5px;          
   display: inline-block;   
   margin: 0 auto 20px auto;
@@ -65,7 +65,7 @@
 /* Card de producto */
 .producto-card {
   width: 14rem;
-  background-color: #ffffff; /* fondo blanco */
+  background-color: #ffffff; 
   color: #333;
   border: 1px solid #ccc;
   border-radius: 8px;
@@ -76,11 +76,17 @@
   transform: scale(1.05);
 }
 
+.producto-card .card-title {
+  font-size: 1rem;       
+  margin-top: 10px;   
+}
+
 .categoria-divider {
   border: none;
   border-top: 3px solid #3a2417; 
-  margin: 30px auto;             
-  width: 80%;                    
+  margin: 40px 0;             
+  width: 100%; 
+  opacity: 1;
 }
 
 /* Botón agregar producto */
@@ -110,17 +116,17 @@
 
 /* - Modal Agregar Categoria - */
 .modal-header {
-  background-color: #4f4f35 !important; /* verde oscuro */
-  color: #fff !important;               /* texto blanco */
+  background-color: #4f4f35 !important;
+  color: #fff !important;               
 }
 
 .btn-custom {
-  background-color: #4f4f35 !important; /* verde oscuro */
-  color: #fff !important;               /* texto blanco */
+  background-color: #4f4f35 !important; 
+  color: #fff !important;               
   border: none !important;
 }
 
 .btn-custom:hover {
-  background-color: #3a3a28 !important; /* tono más oscuro al hover */
+  background-color: #3a3a28 !important;
   color: #fff !important;
 }

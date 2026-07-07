@@ -22,14 +22,6 @@ public class CategoriaController {
         this.categoriaService = categoriaService;
     }
 
-    @GetMapping("/listado")
-    public String listado(Model model) {
-        var categorias = categoriaService.getCategoriasConProductos();
-        model.addAttribute("categorias", categorias);
-        model.addAttribute("categoria", new Categoria());
-        return "catalogo/listado";
-    }
-
     @PostMapping("/guardar")
     public String guardar(@ModelAttribute Categoria categoria) {
         categoriaService.save(categoria);
