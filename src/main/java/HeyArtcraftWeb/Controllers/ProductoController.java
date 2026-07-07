@@ -23,18 +23,6 @@ public class ProductoController {
         this.categoriaService = categoriaService;
     }
 
-    @GetMapping("/listado")
-    public String listado(Model model) {
-        var productos = productoService.getProductos();
-        var categorias = categoriaService.getCategoriasConProductos();
-        Producto producto = new Producto();
-        producto.setCategoria(new Categoria());
-        model.addAttribute("productos", productos);
-        model.addAttribute("categorias", categorias);
-        model.addAttribute("producto", producto);
-        return "/catalogo/listado";
-    }
-
     @PostMapping("/guardar")
     public String guardar(@ModelAttribute Producto producto,
             @RequestParam("imagenFile") MultipartFile imagenFile) {

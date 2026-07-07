@@ -15,11 +15,17 @@
             
             <!-- Productos -->
             <div class="d-flex flex-wrap gap-3 justify-content-center mt-3">
-                <div class="card producto-card" th:each="p : ${c.productos}">
-                    <div class="card-body">
-                        <img th:src="${p.imagen}" class="card-img-top producto-img" alt="Imagen producto"/>
-                        <h5 class="card-title" th:text="${p.nombre}"></h5>
+                <div th:each="p : ${c.productos}">
+                    <div class="card producto-card"
+                         style="cursor: pointer;"
+                         data-bs-toggle="modal"
+                         th:attr="data-bs-target='#editarProductoModal__' + ${p.id}">
+                        <div class="card-body text-center">
+                            <img th:src="@{${p.imagen}}" class="card-img-top producto-img" alt="Imagen producto"/>
+                            <h5 class="card-title" th:text="${p.nombre}"></h5>
+                        </div>
                     </div>
+                    <section th:replace="~{catalogo/fragmentos :: editar_producto(${p})}"/>
                 </div>
                 <!-- Botón agregar producto -->
                 <div class="d-flex align-items-center">
