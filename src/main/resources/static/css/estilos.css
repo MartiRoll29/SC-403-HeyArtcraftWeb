@@ -13,13 +13,12 @@
     padding: 15px 30px;   
 }
 
-/* Header*/
+/* - Header - */
 .wrapper.header {
   padding: 20px 80px; 
 }
 
-/* Footer:*/
-/* Footer con dos capas */
+/* - Footer - */
 .wrapper.footer {
   position: relative;
   height: 200px; /* ajusta según tu diseño */
@@ -52,6 +51,7 @@
 }
 
 /* --- CATALOGO --- */
+/* - Body - */
 /* Título de categoría */
 .categoria-titulo {
   color:#3a2417;
@@ -76,6 +76,13 @@
   transform: scale(1.05);
 }
 
+.categoria-divider {
+  border: none;
+  border-top: 3px solid #3a2417; 
+  margin: 30px auto;             
+  width: 80%;                    
+}
+
 /* Botón agregar producto */
 .btn-success.rounded-circle {
   width: 45px;
@@ -86,16 +93,34 @@
   background-color: #4f4f35;
 }
 
-/* Botón global agregar categoría */
+/* Botón agregar categoría */
 .btn-success.rounded-pill {
   font-weight: bold;
   background-color: #4f4f35;
 }
+
 .btn-success,
 .btn-success:hover,
 .btn-success:focus,
 .btn-success:active {
-  background-color: #4f4f35 !important;
-  border-color: #4f4f35 !important;
+    background-color: #4f4f35 !important;
+    border-color: #4f4f35 !important;
+    color: #fff !important;
+}
+
+/* - Modal Agregar Categoria - */
+.modal-header {
+  background-color: #4f4f35 !important; /* verde oscuro */
+  color: #fff !important;               /* texto blanco */
+}
+
+.btn-custom {
+  background-color: #4f4f35 !important; /* verde oscuro */
+  color: #fff !important;               /* texto blanco */
+  border: none !important;
+}
+
+.btn-custom:hover {
+  background-color: #3a3a28 !important; /* tono más oscuro al hover */
   color: #fff !important;
 }

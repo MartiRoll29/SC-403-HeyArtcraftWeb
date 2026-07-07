@@ -9,12 +9,12 @@
 
     <!-- Contenedor principal -->
     <div class="container my-4">
-        <div th:each="c : ${categorias}" class="text-center">
+        <div th:each="c : ${categorias}" class="text-center mb-5">
             <!-- Título de categoría -->
             <h3 class="categoria-titulo" th:text="${c.nombre}"></h3>
             
             <!-- Productos -->
-            <div class="d-flex flex-wrap gap-3">
+            <div class="d-flex flex-wrap gap-3 justify-content-center mt-3">
                 <div class="card producto-card" th:each="p : ${c.productos}">
                     <div class="card-body text-center">
                         <img th:src="${p.imagen}" class="card-img-top producto-img" alt="Imagen producto"/>
@@ -26,17 +26,14 @@
                         data-bs-toggle="modal" th:attr="data-bs-target='#agregarProducto__' + ${c.id}">
                     <i class="fa-solid fa-plus"></i>
                 </button>
+                <section th:replace="~{catalogo/fragmentos :: eliminar}"/>
+                <hr class="categoria-divider">
             </div>
         </div>
     </div>
 
-    <!-- Botón global agregar categoría -->
-    <div class="d-flex justify-content-center my-4">
-        <button type="button" class="btn btn-success rounded-pill px-4"
-                data-bs-toggle="modal" data-bs-target="#agregarCategoriaModal">
-            <i class="fa-solid fa-plus"></i> [[#{categoria.agregar}]]
-        </button>
-    </div>
+    <!-- Botón agregar categoría -->
+    <section th:replace="~{catalogo/fragmentos :: agregar}"/>
 
     <!-- Footer -->
     <footer th:replace="~{general/fragmentos :: footer}"/>

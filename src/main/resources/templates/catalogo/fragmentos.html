@@ -2,6 +2,16 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+    
+    <!-- Fragmento head -->
+    <head th:fragment="head">
+        <meta charset="UTF-8">
+        <!-- Bootstrap y FontAwesome desde WebJars -->
+        <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.7/css/bootstrap.min.css}"/>
+        <link rel="stylesheet" th:href="@{/webjars/font-awesome/7.0.0/css/all.css}"/>
+        <link th:href="@{/css/estilos.css}" rel="stylesheet"/>
+    </head>
+    
     <body>
         <!-- Agregar categoría -->
         <section th:fragment="agregar">
@@ -11,22 +21,65 @@
                     <i class="fa-solid fa-plus"></i> [[#{categoria.agregar}]]
                 </button>
             </div>
-
             <div class="modal fade" id="agregarCategoriaModal" tabindex="-1">
                 <div class="modal-dialog">
-                    <div class="modal-content bg-dark text-light">
+                    <div class="modal-content">
                         <form th:action="@{/categoria/guardar}" th:object="${categoria}" method="post">
-                            <div class="modal-header bg-success text-white">
+                            <div class="modal-header custom-header">
                                 <h5 class="modal-title">[[#{categoria.agregar}]]</h5>
                                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                             </div>
                             <div class="modal-body">
                                 <label>[[#{categoria.nombre}]]</label>
-                                <input type="text" th:field="*{nombre}" class="form-control bg-dark text-light border-secondary" required/>
+                                <input type="text" th:field="*{nombre}" class="form-control" required/>
                             </div>
                             <div class="modal-footer">
-                                <button type="submit" class="btn btn-outline-light">[[#{accion.guardar}]]</button>
-                                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">[[#{accion.cerrar}]]</button>
+                                <button type="submit" class="btn btn-custom">[[#{accion.guardar}]]</button>
+                                <button type="button" class="btn btn-custom-outline-secondary" data-bs-dismiss="modal">[[#{accion.cerrar}]]</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Eliminar categoría -->
+        <section th:fragment="eliminar">
+            <!-- Botón eliminar categoría (solo si no tiene productos) -->
+            <button type="button" class="btn btn-success rounded-pill px-4"
+                    data-bs-toggle="modal"
+                    th:attr="data-bs-target='#eliminarModal__' + ${c.id}"
+                    th:if="${#lists.isEmpty(c.productos)}">
+                <i class="fa-solid fa-minus"></i> [[#{categoria.eliminar}]]
+            </button>
+
+            <!-- Modal de confirmación -->
+            <div class="modal fade" th:id="'eliminarModal__' + ${c.id}" tabindex="-1"
+                 th:if="${#lists.isEmpty(c.productos)}">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <form th:action="@{/categoria/eliminar}" method="post">
+                            <input type="hidden" name="id" th:value="${c.id}"/>
+
+                            <!-- Header -->
+                            <div class="modal-header bg-secondary text-white">
+                                <h5 class="modal-title">[[#{accion.confirmar}]]</h5>
+                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                            </div>
+
+                            <!-- Body -->
+                            <div class="modal-body">
+                                <p>[[#{accion.confirmar.texto1}]] <span th:text="${c.nombre}"></span>?</p>
+                            </div>
+
+                            <!-- Footer -->
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-custom">
+                                    <i class="fa-solid fa-trash"></i> [[#{accion.eliminar}]]
+                                </button>
+                                <button type="button" class="btn btn-custom" data-bs-dismiss="modal">
+                                    <i class="fa-solid fa-xmark"></i> [[#{accion.cerrar}]]
+                                </button>
                             </div>
                         </form>
                     </div>
