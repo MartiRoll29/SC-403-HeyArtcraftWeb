@@ -62,12 +62,8 @@ public class ProductoService {
     public void delete(Integer id) {
         Producto producto = productoRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Producto no encontrado"));
-        if (producto.getImagen() != null) {
-            File archivo = new File("src/main/resources/static/img" + producto.getImagen());
-            if (archivo.exists()) {
-                archivo.delete();
-            }
-        }
+
+        // ✅ Eliminar el producto completo de la BD
         productoRepository.delete(producto);
     }
 
