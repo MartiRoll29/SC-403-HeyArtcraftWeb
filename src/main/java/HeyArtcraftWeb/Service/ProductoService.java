@@ -59,9 +59,16 @@ public class ProductoService {
         productoRepository.save(producto);
     }
 
-    @Transactional
     public void delete(Integer id) {
-        productoRepository.deleteById(id);
+        Producto producto = productoRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Producto no encontrado"));
+        if (producto.getImagen() != null) {
+            File archivo = new File("src/main/resources/static/img" + producto.getImagen());
+            if (archivo.exists()) {
+                archivo.delete();
+            }
+        }
+        productoRepository.delete(producto);
     }
 
     @Transactional(readOnly = true)

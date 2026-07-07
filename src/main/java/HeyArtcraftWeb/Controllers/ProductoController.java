@@ -33,7 +33,7 @@ public class ProductoController {
     @PostMapping("/eliminar")
     public String eliminar(@RequestParam("id") Integer id) {
         productoService.delete(id);
-        return "redirect:/catalogo";
+        return "redirect:/catalogo/listado";
     }
 
     @GetMapping("/modificar/{id}")
