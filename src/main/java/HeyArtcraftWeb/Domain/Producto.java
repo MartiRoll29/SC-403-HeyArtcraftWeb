@@ -1,5 +1,6 @@
 package HeyArtcraftWeb.Domain;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -16,6 +17,7 @@ public class Producto {
     private Integer id;
     private String nombre;
     private BigDecimal precio;
+    @Column(name = "ruta_imagen", length = 1024)
     private String imagen;
 
     @ManyToOne
