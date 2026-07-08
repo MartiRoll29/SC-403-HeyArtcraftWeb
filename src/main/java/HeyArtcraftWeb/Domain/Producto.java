@@ -20,10 +20,19 @@ public class Producto {
     @Column(name = "ruta_imagen", length = 1024)
     private String imagen;
 
+    @Column(length = 1000)
+    private String descripcion;
+
+    @Column(name = "tamanos_disponibles", length = 120)
+    private String tamanosDisponibles;
+
+    @Column(nullable = false)
+    private boolean personalizable = true;
+
     @ManyToOne
     @JoinColumn(name = "categoria_id")
     private Categoria categoria;
-    
+
     public Integer getId() {
         return id;
     }
@@ -56,5 +65,26 @@ public class Producto {
     }
     public void setCategoria(Categoria categoria) {
         this.categoria = categoria;
+    }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
+
+    public String getTamanosDisponibles() {
+        return tamanosDisponibles;
+    }
+    public void setTamanosDisponibles(String tamanosDisponibles) {
+        this.tamanosDisponibles = tamanosDisponibles;
+    }
+
+    public boolean isPersonalizable() {
+        return personalizable;
+    }
+    public void setPersonalizable(boolean personalizable) {
+        this.personalizable = personalizable;
     }
 }
