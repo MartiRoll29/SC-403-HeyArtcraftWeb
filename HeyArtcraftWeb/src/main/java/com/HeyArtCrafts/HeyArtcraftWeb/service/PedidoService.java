@@ -1,11 +1,12 @@
-package HeyArtcraftWeb.Service;
+package com.HeyArtCrafts.HeyArtcraftWeb.service;
 
-import HeyArtcraftWeb.Carrito.CarritoItem;
-import HeyArtcraftWeb.Carrito.CarritoSesion;
-import HeyArtcraftWeb.Domain.DetallePedido;
-import HeyArtcraftWeb.Domain.Pedido;
-import HeyArtcraftWeb.Repository.PedidoRepository;
-import HeyArtcraftWeb.Repository.ProductoRepository;
+import com.HeyArtCrafts.HeyArtcraftWeb.carrito.CarritoItem;
+import com.HeyArtCrafts.HeyArtcraftWeb.carrito.CarritoSesion;
+import com.HeyArtCrafts.HeyArtcraftWeb.model.DetallePedido;
+import com.HeyArtCrafts.HeyArtcraftWeb.model.Pedido;
+import com.HeyArtCrafts.HeyArtcraftWeb.repository.PedidoRepository;
+import com.HeyArtCrafts.HeyArtcraftWeb.repository.ProductoRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +20,7 @@ public class PedidoService {
     private final PedidoRepository pedidoRepository;
     private final ProductoRepository productoRepository;
 
+    @Autowired
     public PedidoService(PedidoRepository pedidoRepository, ProductoRepository productoRepository) {
         this.pedidoRepository = pedidoRepository;
         this.productoRepository = productoRepository;
