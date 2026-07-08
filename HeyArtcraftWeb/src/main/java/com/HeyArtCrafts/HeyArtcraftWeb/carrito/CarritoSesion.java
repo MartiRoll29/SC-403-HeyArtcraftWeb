@@ -1,4 +1,4 @@
-package com.HeyArtCrafts.HeyArtcraftWeb.carrito;
+package HeyArtcraftWeb.Carrito;
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
@@ -11,10 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Carrito de compras propio de cada sesión HTTP (HU-13/HU-14).
- * No depende de un usuario autenticado: cuando el módulo de login exista,
- * el carrito puede seguir funcionando igual y, opcionalmente, asociarse al
- * usuario en el momento de confirmar la compra.
+ * Carrito de compras propio de cada sesión HTTP (HU-13/HU-14). No depende
+ * de un usuario autenticado.
  */
 @Component
 @Scope(value = WebApplicationContext.SCOPE_SESSION, proxyMode = ScopedProxyMode.TARGET_CLASS)

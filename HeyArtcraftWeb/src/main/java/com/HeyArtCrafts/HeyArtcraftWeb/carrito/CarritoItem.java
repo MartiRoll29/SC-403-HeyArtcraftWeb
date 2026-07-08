@@ -1,4 +1,4 @@
-package com.HeyArtCrafts.HeyArtcraftWeb.carrito;
+package HeyArtcraftWeb.Carrito;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -8,16 +8,16 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 
 /**
- * Representa un producto personalizado agregado al carrito.
- * Vive únicamente en la sesión HTTP hasta que se confirma la compra (HU-15),
- * momento en el que se persiste como DetallePedido.
+ * Producto personalizado agregado al carrito. Vive únicamente en la sesión
+ * HTTP hasta que se confirma la compra (HU-15), momento en el que se
+ * persiste como DetallePedido.
  */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class CarritoItem implements Serializable {
 
-    private Long productoId;
+    private Integer productoId;
     private String nombreProducto;
     private String imagenUrl;
     private String textoPersonalizado;

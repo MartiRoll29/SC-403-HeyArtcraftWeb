@@ -1,0 +1,141 @@
+/* --- HEADER Y FOOTER --- */
+/* Wrapper general para header y footer */
+.wrapper {
+    position: relative;
+    background-image: url('/img/fondo.jpg');
+    background-size: cover;
+    background-position: center;
+}
+
+/* Bloque verde sólido encima */
+.wrapper .overlay {
+    background-color: #4f4f35;
+    padding: 15px 50px;   
+}
+
+/* - Header - */
+.wrapper.header {
+  padding: 20px 80px; 
+}
+
+/* - Footer - */
+.wrapper.footer {
+  position: relative;
+  height: 200px; 
+}
+
+/* Fondo de hojas solo arriba */
+.wrapper.footer .background {
+  background-image: url('/img/fondo.jpg');
+  background-size: cover;
+  background-position: top center;
+  height: 80px; 
+  width: 100%;
+}
+
+/* Bloque verde */
+.wrapper.footer .overlay {
+  background-color: #4f4f35;
+  height: 120px;
+  display: flex;
+  align-items: center;
+  padding: 0 150px;
+}
+
+/* Logo circular */
+.logo-img {
+    height: 60px;
+    width: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+/* --- CATALOGO --- */
+/* - Body - */
+/* Título de categoría */
+.categoria-titulo {
+  color:#3a2417;
+  font-weight: bold;
+  border-bottom: 3px solid #3a2417;
+  padding-bottom: 5px;          
+  display: inline-block;   
+  margin: 0 auto 20px auto;
+}
+
+/* Card de producto */
+.producto-card {
+  width: 14rem;
+  background-color: #ffffff; 
+  color: #333;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  transition: transform 0.2s ease;
+  margin: 20px;              
+  box-shadow: 0 4px 4px rgba(0,0,0,0.1); 
+}
+
+.producto-card:hover {
+  transform: scale(1.05);
+}
+
+.producto-card .card-title {
+    font-size: 1rem;
+    margin-top: 10px;
+}
+
+.producto-img {
+  width: 100%;               
+  height: 180px;             
+  object-fit: cover;         
+  border-bottom: 1px solid #ccc;
+}
+
+.categoria-divider {
+  border: none;
+  border-top: 3px solid #3a2417; 
+  margin: 40px 0;             
+  width: 100%; 
+  opacity: 1;
+}
+
+/* Botón agregar producto */
+.btn-success.rounded-circle {
+  width: 45px;
+  height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #4f4f35;
+}
+
+/* Botón agregar categoría */
+.btn-success.rounded-pill {
+  font-weight: bold;
+  background-color: #4f4f35;
+}
+
+.btn-success,
+.btn-success:hover,
+.btn-success:focus,
+.btn-success:active {
+    background-color: #4f4f35 !important;
+    border-color: #4f4f35 !important;
+    color: #fff !important;
+}
+
+/* - Modales - */
+.modal-header {
+  background-color: #4f4f35 !important;
+  color: #fff !important;               
+}
+
+.btn-custom {
+  background-color: #4f4f35 !important; 
+  color: #fff !important;               
+  border: none !important;
+}
+
+.btn-custom:hover {
+  background-color: #3a3a28 !important;
+  color: #fff !important;
+}
