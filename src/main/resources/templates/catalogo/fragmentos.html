@@ -53,21 +53,11 @@
         </section>
         
         <!-- Editar categoría -->
-        <section th:fragment="editar">
-            <div class="d-flex justify-content-center my-3">
-                <button type="button" class="btn btn-success rounded-pill px-4 mb-3"
-                        data-bs-toggle="modal" th:attr="data-bs-target='#editarCategoriaModal__' + ${c.id}">
-                    <i class="fa-solid fa-pen-to-square"></i> [[#{categoria.editar}]]
-                </button>
-            </div>
-
+        <section th:fragment="editar_categoria(c)">
             <div class="modal fade" th:id="'editarCategoriaModal__' + ${c.id}" tabindex="-1">
                 <div class="modal-dialog">
                     <div class="modal-content">
-                        <form th:action="@{/categoria/guardar}" th:object="${c}" method="post">
-                            <!-- Campo oculto para el ID -->
-                            <input type="hidden" th:field="*{id}"/>
-
+                        <form th:action="@{/categoria/guardar}" method="post">
                             <!-- Header -->
                             <div class="modal-header">
                                 <h5 class="modal-title">[[#{categoria.editar}]]</h5>
@@ -75,9 +65,11 @@
                             </div>
 
                             <!-- Body -->
-                            <div class="modal-body">
+                            <div class="modal-body mb-3 text-start">
+                                <input type="hidden" name="id" th:value="${c.id}"/>
+
                                 <label>[[#{categoria.nombre}]]</label>
-                                <input type="text" th:field="*{nombre}" class="form-control" required/>
+                                <input type="text" name="nombre" th:value="${c.nombre}" class="form-control" required/>
                             </div>
 
                             <!-- Footer -->
@@ -94,6 +86,7 @@
                 </div>
             </div>
         </section>
+
         
         <!-- Eliminar categoría -->
         <section th:fragment="eliminar_categoria">
@@ -138,6 +131,7 @@
                 </div>
             </div>
         </section>
+
         
         <!-- Agregar producto -->
         <section th:fragment="agregar_producto">
@@ -219,7 +213,7 @@
                                 <button type="submit" class="btn btn-custom">
                                     <i class="fa-solid fa-floppy-disk"></i> [[#{accion.guardar}]]
                                 </button>
-                                <button type="button" class="btn btn-danger"
+                                <button type="button" class="btn btn-custom"
                                         data-bs-toggle="modal"
                                         th:attr="data-bs-target='#confirmEliminarProducto__' + ${p.id}">
                                     <i class="fa-solid fa-trash"></i> [[#{accion.eliminar}]]
@@ -246,7 +240,7 @@
                                 <p>[[#{accion.confirmar.texto1}]] <span th:text="${p.nombre}"></span>?</p>
                             </div>
                             <div class="modal-footer">
-                                <button type="submit" class="btn btn-danger">
+                                <button type="submit" class="btn btn-custom">
                                     <i class="fa-solid fa-trash"></i> [[#{accion.eliminar}]]
                                 </button>
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">

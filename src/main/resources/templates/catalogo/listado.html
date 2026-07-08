@@ -9,9 +9,19 @@
 
     <!-- Contenedor principal -->
     <div class="container my-4">
-        <div th:each="c : ${categorias}" class="text-center mb-2">
-            <!-- Título de categoría -->
-            <h3 class="categoria-titulo" th:text="${c.nombre}"></h3>
+        <div th:each="c : ${categorias}" class="text-center mb-2">            
+            <!-- Título con lápiz integrado -->
+            <h3 class="categoria-titulo mb-0 d-inline-flex align-items-center">
+                <span th:text="${c.nombre}"></span>
+                <i class="fa-solid fa-pen-to-square"
+                   style="color: #3a2417; font-size: 1.2rem; margin-left: 6px; cursor: pointer;"
+                   data-bs-toggle="modal"
+                   th:attr="data-bs-target='#editarCategoriaModal__' + ${c.id}">
+                </i>
+            </h3>
+
+            <!-- Modal editar categoría -->
+            <section th:replace="~{catalogo/fragmentos :: editar_categoria(${c})}"/>
             
             <!-- Productos -->
             <div class="d-flex flex-wrap gap-3 justify-content-center mt-3">
@@ -42,7 +52,7 @@
         </div>
     </div>
 
-    <!-- Botón editar y agregar categoría -->
+    <!-- Botón agregar categoría -->
     <section th:replace="~{catalogo/fragmentos :: agregar_categoria}"/>
 
     <!-- Footer -->

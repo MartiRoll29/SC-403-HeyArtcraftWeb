@@ -21,7 +21,7 @@ public class CategoriaController {
     public CategoriaController(CategoriaService categoriaService) {
         this.categoriaService = categoriaService;
     }
-
+    
     @PostMapping("/guardar")
     public String guardar(@ModelAttribute Categoria categoria) {
         categoriaService.save(categoria);
@@ -33,14 +33,16 @@ public class CategoriaController {
         categoriaService.delete(id);
         return "redirect:/catalogo/listado";
     }
-
-    @GetMapping("/modificar/{id}")
-    public String modificar(@PathVariable("id") Integer id, Model model) {
+    
+    @GetMapping("/categoria/modificar/{id}")
+    public String modificarCategoria(@PathVariable("id") Integer id, Model model) {
         Optional<Categoria> categoriaOpt = categoriaService.getCategoria(id);
         if (categoriaOpt.isEmpty()) {
             return "redirect:/catalogo/listado";
         }
+        // Pasamos la categoría encontrada al modelo
         model.addAttribute("categoria", categoriaOpt.get());
-        return "catalogo/modifica";
+        model.addAttribute("categorias", categoriaService.getCategorias());
+        return "catalogo/listado";
     }
 }

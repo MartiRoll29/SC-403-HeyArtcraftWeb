@@ -16,17 +16,18 @@ public class CategoriaService {
     }
 
     @Transactional(readOnly = true)
-    public List<Categoria> getCategoriasConProductos() {
-        return categoriaRepository.findAllWithProductos();
-    }
-
     public Optional<Categoria> getCategoria(Integer id) {
-        return getCategoria(id);
+        return categoriaRepository.findById(id);
     }
 
     @Transactional(readOnly = true)
-    public Optional<Categoria> getCategorias(Integer id) {
-        return categoriaRepository.findById(id);
+    public List<Categoria> getCategorias() {
+        return categoriaRepository.findAll();
+    }
+
+    @Transactional(readOnly = true)
+    public List<Categoria> getCategoriasConProductos() {
+        return categoriaRepository.findAllWithProductos();
     }
 
     @Transactional
