@@ -1,0 +1,65 @@
+:root {
+    --color-olive: #4B5136;
+    --color-sage: #8A8F73;
+    --color-walnut: #6B4426;
+    --color-cream: #E8DCC5;
+    --color-taupe: #CBB9A3;
+}
+
+body {
+    background-color: var(--color-cream);
+    color: var(--color-olive);
+    font-family: "Segoe UI", Roboto, Arial, sans-serif;
+}
+
+.navbar-hey {
+    background-color: var(--color-walnut);
+}
+
+.navbar-hey .navbar-brand img {
+    height: 42px;
+}
+
+.navbar-hey .nav-link {
+    color: var(--color-cream) !important;
+}
+
+.navbar-hey .nav-link:hover {
+    color: var(--color-taupe) !important;
+}
+
+.btn-hey {
+    background-color: var(--color-olive);
+    border-color: var(--color-olive);
+    color: var(--color-cream);
+}
+
+.btn-hey:hover {
+    background-color: var(--color-sage);
+    border-color: var(--color-sage);
+    color: white;
+}
+
+.card-producto {
+    border: 1px solid var(--color-taupe);
+    transition: transform 0.15s ease-in-out;
+}
+
+.card-producto:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 0.5rem 1rem rgba(75, 81, 54, 0.25);
+}
+
+.card-producto img {
+    height: 220px;
+    object-fit: cover;
+}
+
+.footer-hey {
+    background-color: var(--color-olive);
+    color: var(--color-cream);
+}
+
+.badge-carrito {
+    background-color: var(--color-sage);
+}
