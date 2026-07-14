@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{general/fragmentos :: head}"></head>
+<body>
+    <header th:replace="~{general/fragmentos :: header}"></header>
+
+    <div class="container my-4">
+        <h1 class="text-center categoria-titulo mb-4">Catálogo</h1>
+
+        <div th:if="${#lists.isEmpty(productos)}" class="alert alert-warning text-center">
+            Todavía no hay productos disponibles en el catálogo.
+        </div>
+
+        <div class="d-flex flex-wrap gap-3 justify-content-center">
+            <a th:each="producto : ${productos}" th:href="@{/catalogo/{id}(id=${producto.id})}"
+               class="text-decoration-none text-reset">
+                <div class="card producto-card">
+                    <div class="card-body text-center">
+                        <img th:src="@{${producto.imagen}}" class="card-img-top producto-img" alt="Imagen producto"/>
+                        <h5 class="card-title" th:text="${producto.nombre}"></h5>
+                        <p class="fw-bold mb-0"
+                           th:text="${'₡' + #numbers.formatDecimal(producto.precio, 1, 'COMMA', 0, 'POINT')}">
+                            ₡0
+                        </p>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <footer th:replace="~{general/fragmentos :: footer}"></footer>
+</body>
+</html>

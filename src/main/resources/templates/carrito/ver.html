@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{general/fragmentos :: head}"></head>
+<body>
+    <header th:replace="~{general/fragmentos :: header}"></header>
+
+    <div class="container my-4">
+        <h1 class="categoria-titulo mb-4">Mi Carrito</h1>
+
+        <div th:if="${#lists.isEmpty(items)}" class="alert alert-info">
+            Su carrito está vacío. <a th:href="@{/catalogo}">Explore el catálogo</a> para agregar productos.
+        </div>
+
+        <div th:if="${not #lists.isEmpty(items)}" class="row g-4">
+            <div class="col-lg-8">
+                <div class="card producto-card mb-3 w-100" th:each="item, iter : ${items}">
+                    <div class="card-body d-flex justify-content-between align-items-start">
+                        <div>
+                            <h5 class="card-title" th:text="${item.nombreProducto}"></h5>
+                            <p class="mb-1" th:if="${item.textoPersonalizado != null and !#strings.isEmpty(item.textoPersonalizado)}">
+                                <strong>Texto personalizado:</strong> <span th:text="${item.textoPersonalizado}"></span>
+                            </p>
+                            <p class="mb-1" th:if="${item.tamanoSeleccionado != null}">
+                                <strong>Tamaño:</strong> <span th:text="${item.tamanoSeleccionado}"></span>
+                            </p>
+                            <p class="mb-1" th:if="${item.especificaciones != null and !#strings.isEmpty(item.especificaciones)}">
+                                <strong>Especificaciones:</strong> <span th:text="${item.especificaciones}"></span>
+                            </p>
+                            <p class="fw-bold mb-0"
+                               th:text="${'₡' + #numbers.formatDecimal(item.precioUnitario, 1, 'COMMA', 0, 'POINT')}">
+                                ₡0
+                            </p>
+                        </div>
+                        <form th:action="@{/carrito/eliminar/{indice}(indice=${iter.index})}" method="post">
+                            <button type="submit" class="btn btn-outline-danger btn-sm">
+                                <i class="fa-solid fa-trash"></i> Eliminar
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="card producto-card w-100">
+                    <div class="card-body">
+                        <h5 class="card-title categoria-titulo">Resumen de compra</h5>
+
+                        <form th:action="@{/carrito/confirmar}" method="post" id="formConfirmar">
+                            <div class="d-flex justify-content-between">
+                                <span>Subtotal</span>
+                                <span id="subtotalTexto"
+                                      th:text="${'₡' + #numbers.formatDecimal(subtotal, 1, 'COMMA', 0, 'POINT')}"
+                                      th:attr="data-subtotal=${subtotal}">₡0</span>
+                            </div>
+                            <small class="text-muted">El impuesto ya está incluido en el precio de cada producto.</small>
+
+                            <div class="form-check my-3">
+                                <input class="form-check-input" type="checkbox" value="true" id="incluyeEnvio"
+                                       name="incluyeEnvio" th:attr="data-costo-envio=${costoEnvio}"/>
+                                <label class="form-check-label" for="incluyeEnvio">
+                                    Incluir envío
+                                    (<span th:text="${'₡' + #numbers.formatDecimal(costoEnvio, 1, 'COMMA', 0, 'POINT')}">₡0</span>)
+                                </label>
+                            </div>
+
+                            <hr/>
+                            <div class="d-flex justify-content-between fs-5 fw-bold">
+                                <span>Total</span>
+                                <span id="totalTexto">
+                                    <span th:text="${'₡' + #numbers.formatDecimal(subtotal, 1, 'COMMA', 0, 'POINT')}">₡0</span>
+                                </span>
+                            </div>
+
+                            <button type="submit" class="btn btn-custom w-100 mt-3">Comprar</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de confirmación de compra (HU-15) -->
+    <div th:if="${pedidoConfirmado != null}" class="modal fade" id="modalConfirmacion" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">¡Compra confirmada!</h5>
+                </div>
+                <div class="modal-body">
+                    <p>Su pedido <strong th:text="'#' + ${pedidoConfirmado.id}"></strong> fue registrado con éxito.</p>
+                    <p class="mb-1">Subtotal:
+                        <span th:text="${'₡' + #numbers.formatDecimal(pedidoConfirmado.subtotal, 1, 'COMMA', 0, 'POINT')}"></span>
+                    </p>
+                    <p class="mb-1" th:if="${pedidoConfirmado.incluyeEnvio}">Envío:
+                        <span th:text="${'₡' + #numbers.formatDecimal(pedidoConfirmado.costoEnvio, 1, 'COMMA', 0, 'POINT')}"></span>
+                    </p>
+                    <p class="fw-bold">Total pagado:
+                        <span th:text="${'₡' + #numbers.formatDecimal(pedidoConfirmado.total, 1, 'COMMA', 0, 'POINT')}"></span>
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <a th:href="@{/catalogo}" class="btn btn-custom">Seguir comprando</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer th:replace="~{general/fragmentos :: footer}"></footer>
+
+    <script th:if="${not #lists.isEmpty(items)}">
+        const checkboxEnvio = document.getElementById('incluyeEnvio');
+        const totalTexto = document.getElementById('totalTexto');
+        const subtotal = parseFloat(document.getElementById('subtotalTexto').dataset.subtotal);
+        const costoEnvio = parseFloat(checkboxEnvio.dataset.costoEnvio);
+
+        function formatearColones(valor) {
+            return '₡' + valor.toLocaleString('es-CR', { maximumFractionDigits: 0 });
+        }
+
+        checkboxEnvio.addEventListener('change', function () {
+            const total = checkboxEnvio.checked ? subtotal + costoEnvio : subtotal;
+            totalTexto.innerHTML = '<span>' + formatearColones(total) + '</span>';
+        });
+    </script>
+
+    <script th:if="${pedidoConfirmado != null}">
+        document.addEventListener('DOMContentLoaded', function () {
+            new bootstrap.Modal(document.getElementById('modalConfirmacion')).show();
+        });
+    </script>
+</body>
+</html>
