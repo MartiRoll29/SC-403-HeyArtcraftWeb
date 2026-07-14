@@ -28,10 +28,8 @@
         <!-- Barra de navegación: HU-04 y HU-05 -->
         <header class="wrapper header" th:fragment="header">
             <div class="overlay">
-
                 <nav class="navbar navbar-expand-lg navbar-dark"
                      aria-label="Navegación principal">
-
                     <div class="container-fluid">
 
                         <!-- Logo -->
@@ -59,23 +57,20 @@
                         <!-- Opciones de navegación -->
                         <div class="collapse navbar-collapse"
                              id="menuPrincipal">
-
-                            <ul class="navbar-nav mx-auto align-items-lg-center">
-
+                            <ul class="navbar-nav ms-auto align-items-lg-center">
                                 <li class="nav-item">
                                     <a class="nav-link"
                                        th:href="@{/}">
                                         [[#{plantilla.inicio}]]
                                     </a>
                                 </li>
-
                                 <li class="nav-item">
                                     <a class="nav-link"
                                        th:href="@{/catalogo}">
                                         [[#{plantilla.catalogo}]]
                                     </a>
                                 </li>
-
+                                
                                 <!-- Redirección a WhatsApp -->
                                 <li class="nav-item">
                                     <a class="nav-link"
@@ -86,7 +81,7 @@
                                         [[#{plantilla.personalizar}]]
                                     </a>
                                 </li>
-
+                                
                                 <!-- Carrito -->
                                 <li class="nav-item">
                                     <a class="nav-link position-relative"
@@ -103,15 +98,7 @@
                                         </span>
                                     </a>
                                 </li>
-
-                                <!-- Acceso administrativo temporal -->
-                                <li class="nav-item">
-                                    <a class="nav-link"
-                                       th:href="@{/catalogo/listado}">
-                                        [[#{plantilla.admin}]]
-                                    </a>
-                                </li>
-
+                                
                                 <!-- El perfil dirige temporalmente al administrador -->
                                 <li class="nav-item">
                                     <a class="nav-link nav-perfil"
@@ -133,47 +120,35 @@
 
         <!-- Fragmento footer -->
         <footer class="wrapper footer" th:fragment="footer">
-
             <div class="background"></div>
-
             <div class="overlay text-white text-center">
-
                 <div class="container-fluid d-flex justify-content-between align-items-center">
-
                     <a class="navbar-brand" th:href="@{/}">
                         <img th:src="@{/img/logoblanco.png}"
                              alt="Logo de Hey Artcraft"
                              class="logo-img"/>
                     </a>
-
-                    <h3 class="lead flex-grow-1 text-center">
+                    <h3 class="lead text-center flex-grow-1 mb-0">
                         [[#{plantilla.derechos}]] &COPY;
                     </h3>
-
-                    <div style="font-size: 1.5rem;">
-
+                    <div class="social-icons ms-auto" style="font-size: 1.5rem;">
                         <a href="https://www.instagram.com/hey_artcrafts/"
                            target="_blank"
                            rel="noopener"
                            style="color:#fff; text-decoration:none;">
-
                             <i class="fa-brands fa-instagram"></i>
                         </a>
-
                         <a href="https://api.whatsapp.com/send/?phone=50686986239&amp;text&amp;type=phone_number&amp;app_absent=0"
                            target="_blank"
                            rel="noopener"
                            style="color:#fff; text-decoration:none;">
-
                             <i class="fa-brands fa-whatsapp"></i>
                         </a>
-
                         <a href="https://www.facebook.com/HeyArtcrafts/"
                            target="_blank"
                            rel="noopener"
                            style="color:#fff; text-decoration:none;">
-
-                            <i class="fa-brands fa-facebook"></i>
+                           <i class="fa-brands fa-facebook"></i>
                         </a>
 
                     </div>
@@ -183,7 +158,6 @@
 
         <!-- Mensajes emergentes -->
         <section th:fragment="mostrarToast">
-
             <div aria-live="polite"
                  aria-atomic="true"
                  class="position-fixed top-50 start-50 translate-middle"
@@ -209,7 +183,6 @@
                         </div>
                     </div>
                 </div>
-
                 <div th:if="${todoOk}"
                      class="toast show bg-dark text-light border border-success">
 
@@ -230,9 +203,7 @@
                         </div>
                     </div>
                 </div>
-
             </div>
         </section>
-
     </body>
 </html>

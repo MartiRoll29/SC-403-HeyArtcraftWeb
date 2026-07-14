@@ -19,7 +19,7 @@ public class CarritoItem implements Serializable {
 
     private Integer productoId;
     private String nombreProducto;
-    private String imagenUrl;
+    private String imagenProducto;;
     private String textoPersonalizado;
     private String tamanoSeleccionado;
     private String especificaciones;
