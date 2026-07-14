@@ -160,6 +160,11 @@
                                     <label>[[#{producto.imagen}]]</label>
                                     <input type="file" name="imagenFile" accept=".jpg,.jpeg,.png" class="form-control" required/>
                                 </div>
+
+                                <div class="form-check mt-3">
+                                    <input type="checkbox" class="form-check-input" th:field="*{destacado}"/>
+                                    <label class="form-check-label" th:for="${'destacado'}">[[#{producto.destacado}]]</label>
+                                </div>
                             </div>
 
                             <!-- Footer -->
@@ -176,7 +181,7 @@
                 </div>
             </div>
         </section>
-        
+
         <!-- Editar_producto -->
         <section th:fragment="editar_producto(p)">
             <div class="modal fade" th:id="'editarProductoModal__' + ${p.id}" tabindex="-1">
@@ -192,6 +197,10 @@
                             <!-- Body -->
                             <div class="modal-body mb-3 text-start">
                                 <input type="hidden" name="id" th:value="${p.id}"/>
+                                <input type="hidden" name="imagen" th:value="${p.imagen}"/>
+                                <input type="hidden" name="descripcion" th:value="${p.descripcion}"/>
+                                <input type="hidden" name="tamanosDisponibles" th:value="${p.tamanosDisponibles}"/>
+                                <input type="hidden" name="personalizable" th:value="${p.personalizable}"/>
                                 <label>[[#{producto.nombre}]]</label>
                                 <input type="text" name="nombre" th:value="${p.nombre}" class="form-control" required/>
 
@@ -206,8 +215,14 @@
 
                                 <label class="mt-3">[[#{producto.imagen}]]</label>
                                 <input type="file" name="imagenFile" accept=".jpg,.jpeg,.png" class="form-control"/>
+
+                                <div class="form-check mt-3">
+                                    <input type="checkbox" class="form-check-input" name="destacado" value="true"
+                                           th:id="'destacado__' + ${p.id}" th:checked="${p.destacado}"/>
+                                    <label class="form-check-label" th:for="'destacado__' + ${p.id}">[[#{producto.destacado}]]</label>
+                                </div>
                             </div>
-                            
+
                             <!-- Footer -->
                             <div class="modal-footer d-flex justify-content-between">
                                 <button type="submit" class="btn btn-custom">

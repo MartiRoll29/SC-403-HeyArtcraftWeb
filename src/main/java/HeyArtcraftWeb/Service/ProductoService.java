@@ -80,4 +80,10 @@ public class ProductoService {
     public List<Producto> getProductos() {
         return productoRepository.findAll();
     }
+
+    // HU-09: Visualizar productos destacados
+    @Transactional(readOnly = true)
+    public List<Producto> getProductosDestacados() {
+        return productoRepository.findByDestacadoTrue();
+    }
 }

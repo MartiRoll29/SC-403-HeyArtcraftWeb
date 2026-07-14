@@ -29,6 +29,9 @@ public class Producto {
     @Column(nullable = false)
     private boolean personalizable = true;
 
+    @Column(nullable = false)
+    private boolean destacado = false;
+
     @ManyToOne
     @JoinColumn(name = "categoria_id")
     private Categoria categoria;
@@ -86,5 +89,12 @@ public class Producto {
     }
     public void setPersonalizable(boolean personalizable) {
         this.personalizable = personalizable;
+    }
+
+    public boolean isDestacado() {
+        return destacado;
+    }
+    public void setDestacado(boolean destacado) {
+        this.destacado = destacado;
     }
 }
