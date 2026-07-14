@@ -1,106 +1,238 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
-    
+
     <!-- Fragmento head -->
     <head th:fragment="head">
         <meta charset="UTF-8"/>
         <title>Hey Artcraft</title>
-        <!-- Tipografía Poppins (Figma) -->
+
         <link rel="preconnect" href="https://fonts.googleapis.com"/>
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""/>
-        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
-        <!-- Bootstrap y FontAwesome desde WebJars -->
-        <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.7/css/bootstrap.min.css}"/>
-        <link rel="stylesheet" th:href="@{/webjars/font-awesome/7.0.0/css/all.css}"/>
-        <link th:href="@{/css/estilos.css}" rel="stylesheet"/>
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&amp;display=swap"
+              rel="stylesheet"/>
+
+        <link rel="stylesheet"
+              th:href="@{/webjars/bootstrap/5.3.7/css/bootstrap.min.css}"/>
+        <link rel="stylesheet"
+              th:href="@{/webjars/font-awesome/7.0.0/css/all.css}"/>
+        <link rel="stylesheet" th:href="@{/css/estilos.css}"/>
+
         <script th:src="@{/webjars/jquery/3.7.1/jquery.min.js}"></script>
         <script th:src="@{/webjars/popper.js/2.11.7/umd/popper.min.js}"></script>
         <script th:src="@{/webjars/bootstrap/5.3.7/js/bootstrap.min.js}"></script>
     </head>
 
     <body>
-        <!-- Fragmento header -->
+
+        <!-- Barra de navegación: HU-04 y HU-05 -->
         <header class="wrapper header" th:fragment="header">
             <div class="overlay">
-                <nav class="navbar navbar-expand-lg navbar-dark">
-                    <div class="container-fluid d-flex justify-content-between align-items-center">
-                        <a class="navbar-brand">
-                            <img src="/img/logoblanco.png" alt="Hey Artcraft" class="logo-img">
+
+                <nav class="navbar navbar-expand-lg navbar-dark"
+                     aria-label="Navegación principal">
+
+                    <div class="container-fluid">
+
+                        <!-- Logo -->
+                        <a class="navbar-brand"
+                           th:href="@{/}"
+                           aria-label="Ir al inicio de Hey Artcraft">
+
+                            <img th:src="@{/img/logoblanco.png}"
+                                 alt="Logo de Hey Artcraft"
+                                 class="logo-img"/>
                         </a>
-                        <ul class="navbar-nav flex-row ms-auto align-items-center">
-                            <li class="nav-item px-2"><a class="nav-link text-white" th:href="@{/}">[[#{plantilla.inicio}]]</a></li>
-                            <li class="nav-item px-2"><a class="nav-link text-white" th:href="@{/catalogo}">[[#{plantilla.catalogo}]]</a></li>
-                            <li class="nav-item px-2"><a class="nav-link text-white" th:href="@{/producto/listado}">[[#{plantilla.historial}]]</a></li>
-                            <li class="nav-item px-2">
-                                <a class="nav-link text-white position-relative" th:href="@{/carrito}">
-                                    <i class="fa-solid fa-cart-shopping"></i> [[#{plantilla.carrito}]]
-                                    <span th:if="${carritoCount != null and carritoCount > 0}"
-                                          th:text="${carritoCount}"
-                                          class="badge rounded-pill bg-danger position-absolute top-0 start-100 translate-middle">
-                                    </span>
-                                </a>
-                            </li>
-                        </ul>
-                        <i class="fa fa-user text-white"></i>
+
+                        <!-- Botón para dispositivos móviles -->
+                        <button class="navbar-toggler"
+                                type="button"
+                                data-bs-toggle="collapse"
+                                data-bs-target="#menuPrincipal"
+                                aria-controls="menuPrincipal"
+                                aria-expanded="false"
+                                aria-label="Mostrar u ocultar navegación">
+
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+
+                        <!-- Opciones de navegación -->
+                        <div class="collapse navbar-collapse"
+                             id="menuPrincipal">
+
+                            <ul class="navbar-nav mx-auto align-items-lg-center">
+
+                                <li class="nav-item">
+                                    <a class="nav-link"
+                                       th:href="@{/}">
+                                        [[#{plantilla.inicio}]]
+                                    </a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a class="nav-link"
+                                       th:href="@{/catalogo}">
+                                        [[#{plantilla.catalogo}]]
+                                    </a>
+                                </li>
+
+                                <!-- Redirección a WhatsApp -->
+                                <li class="nav-item">
+                                    <a class="nav-link"
+                                       target="_blank"
+                                       rel="noopener"
+                                       href="https://wa.me/50686986239?text=Hola%2C%20quiero%20informaci%C3%B3n%20para%20personalizar%20un%20producto">
+
+                                        [[#{plantilla.personalizar}]]
+                                    </a>
+                                </li>
+
+                                <!-- Carrito -->
+                                <li class="nav-item">
+                                    <a class="nav-link position-relative"
+                                       th:href="@{/carrito}">
+
+                                        <i class="fa-solid fa-cart-shopping"
+                                           aria-hidden="true"></i>
+
+                                        [[#{plantilla.carrito}]]
+
+                                        <span th:if="${carritoCount != null and carritoCount > 0}"
+                                              th:text="${carritoCount}"
+                                              class="badge rounded-pill bg-danger carrito-badge">
+                                        </span>
+                                    </a>
+                                </li>
+
+                                <!-- Acceso administrativo temporal -->
+                                <li class="nav-item">
+                                    <a class="nav-link"
+                                       th:href="@{/catalogo/listado}">
+                                        [[#{plantilla.admin}]]
+                                    </a>
+                                </li>
+
+                                <!-- El perfil dirige temporalmente al administrador -->
+                                <li class="nav-item">
+                                    <a class="nav-link nav-perfil"
+                                       th:href="@{/catalogo/listado}"
+                                       title="Acceso administrativo temporal"
+                                       th:attr="aria-label=#{plantilla.perfil}">
+
+                                        <i class="fa-solid fa-circle-user"
+                                           aria-hidden="true"></i>
+                                    </a>
+                                </li>
+
+                            </ul>
+                        </div>
                     </div>
                 </nav>
             </div>
         </header>
-        
+
         <!-- Fragmento footer -->
         <footer class="wrapper footer" th:fragment="footer">
+
             <div class="background"></div>
+
             <div class="overlay text-white text-center">
+
                 <div class="container-fluid d-flex justify-content-between align-items-center">
-                    <a class="navbar-brand">
-                        <img src="/img/logoblanco.png" alt="Hey Artcraft" class="logo-img">
+
+                    <a class="navbar-brand" th:href="@{/}">
+                        <img th:src="@{/img/logoblanco.png}"
+                             alt="Logo de Hey Artcraft"
+                             class="logo-img"/>
                     </a>
-                    <h3 class="lead flex-grow-1 text-center">[[#{plantilla.derechos}]] &COPY;</h3>
-                    <div style="font-size:1.5rem;">
-                        <a href="https://www.instagram.com/hey_artcrafts/" target="_blank" style="color:#fff; text-decoration:none;">
+
+                    <h3 class="lead flex-grow-1 text-center">
+                        [[#{plantilla.derechos}]] &COPY;
+                    </h3>
+
+                    <div style="font-size: 1.5rem;">
+
+                        <a href="https://www.instagram.com/hey_artcrafts/"
+                           target="_blank"
+                           rel="noopener"
+                           style="color:#fff; text-decoration:none;">
+
                             <i class="fa-brands fa-instagram"></i>
                         </a>
-                        <a href="https://api.whatsapp.com/send/?phone=50686986239&text&type=phone_number&app_absent=0&utm_source=ig" target="_blank" style="color:#fff; text-decoration:none;">
+
+                        <a href="https://api.whatsapp.com/send/?phone=50686986239&amp;text&amp;type=phone_number&amp;app_absent=0"
+                           target="_blank"
+                           rel="noopener"
+                           style="color:#fff; text-decoration:none;">
+
                             <i class="fa-brands fa-whatsapp"></i>
                         </a>
-                        <a href="https://www.facebook.com/HeyArtcrafts/" target="_blank" style="color:#fff; text-decoration:none;">
+
+                        <a href="https://www.facebook.com/HeyArtcrafts/"
+                           target="_blank"
+                           rel="noopener"
+                           style="color:#fff; text-decoration:none;">
+
                             <i class="fa-brands fa-facebook"></i>
                         </a>
+
                     </div>
                 </div>
             </div>
         </footer>
-        
-        <!-- Fragmento toast (mensajes emergentes) -->
+
+        <!-- Mensajes emergentes -->
         <section th:fragment="mostrarToast">
-            <div aria-live="polite" aria-atomic="true" 
-                 class="position-fixed top-50 start-50 translate-middle" style="z-index: 1080;">                
-                <div th:if="${error}" class="toast show bg-dark text-light border border-danger">
+
+            <div aria-live="polite"
+                 aria-atomic="true"
+                 class="position-fixed top-50 start-50 translate-middle"
+                 style="z-index: 1080;">
+
+                <div th:if="${error}"
+                     class="toast show bg-dark text-light border border-danger">
+
                     <div class="toast-header bg-secondary text-light">
-                        <i class="fa-solid fa-bomb"></i> <strong class="me-auto">Error</strong>
+                        <i class="fa-solid fa-bomb"></i>
+                        <strong class="me-auto">Error</strong>
                     </div>
+
                     <div class="toast-body">
                         <p th:text="${error}"></p>
+
                         <div class="mt-2 pt-2 border-top text-center">
-                            <button type="button" class="btn btn-outline-light btn-sm" 
-                                    data-bs-dismiss="toast">[[#{accion.cerrar}]]</button>
+                            <button type="button"
+                                    class="btn btn-outline-light btn-sm"
+                                    data-bs-dismiss="toast">
+                                [[#{accion.cerrar}]]
+                            </button>
                         </div>
                     </div>
                 </div>
-                <div th:if="${todoOk}" class="toast show bg-dark text-light border border-success">
+
+                <div th:if="${todoOk}"
+                     class="toast show bg-dark text-light border border-success">
+
                     <div class="toast-header bg-secondary text-light">
-                        <i class="fa-solid fa-square-check"></i> <strong class="me-auto">OK</strong>
+                        <i class="fa-solid fa-square-check"></i>
+                        <strong class="me-auto">OK</strong>
                     </div>
+
                     <div class="toast-body">
                         <p th:text="${todoOk}"></p>
+
                         <div class="mt-2 pt-2 border-top text-center">
-                            <button type="button" class="btn btn-outline-light btn-sm" 
-                                    data-bs-dismiss="toast">[[#{accion.cerrar}]]</button>
+                            <button type="button"
+                                    class="btn btn-outline-light btn-sm"
+                                    data-bs-dismiss="toast">
+                                [[#{accion.cerrar}]]
+                            </button>
                         </div>
                     </div>
                 </div>
+
             </div>
         </section>
+
     </body>
 </html>
