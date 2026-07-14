@@ -222,3 +222,109 @@
   background-color: #3a3a28 !important;
   color: #fff !important;
 }
+
+
+/* ==================================================
+   NAVEGACIÓN PRINCIPAL - HU-04 Y HU-05
+   ================================================== */
+
+.header .overlay {
+    border-radius: 2px;
+}
+
+.header .navbar {
+    padding: 0;
+    font-family: 'Poppins', sans-serif;
+}
+
+.header .navbar-brand {
+    padding: 0;
+    margin-right: 2rem;
+}
+
+.header .navbar-nav {
+    gap: 0.15rem;
+}
+
+.header .nav-link {
+    color: #ffffff;
+    font-size: 0.95rem;
+    font-weight: 500;
+    padding: 0.65rem 0.85rem !important;
+    border-radius: 999px;
+    transition: background-color 0.2s ease,
+                color 0.2s ease;
+}
+
+.header .nav-link:hover,
+.header .nav-link:focus-visible {
+    color: #ffffff;
+    background-color: rgba(255, 255, 255, 0.14);
+}
+
+.header .nav-perfil {
+    font-size: 1.25rem;
+    line-height: 1;
+}
+
+.header .navbar-toggler {
+    border-color: rgba(255, 255, 255, 0.7);
+}
+
+.header .navbar-toggler:focus {
+    box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.2);
+}
+
+.carrito-badge {
+    position: absolute;
+    top: -0.1rem;
+    right: -0.15rem;
+    font-size: 0.65rem;
+}
+
+/* Ajustes para pantallas medianas */
+@media (max-width: 1199.98px) {
+
+    .wrapper.header {
+        padding: 20px 40px;
+    }
+}
+
+/* Menú desplegable para tabletas y celulares */
+@media (max-width: 991.98px) {
+
+    .header .navbar-collapse {
+        padding-top: 1rem;
+    }
+
+    .header .navbar-nav {
+        align-items: stretch !important;
+    }
+
+    .header .nav-link {
+        display: block;
+        text-align: center;
+    }
+
+    .carrito-badge {
+        position: static;
+        margin-left: 0.35rem;
+    }
+}
+
+/* Ajustes para celulares pequeños */
+@media (max-width: 575.98px) {
+
+    .wrapper.header {
+        padding: 12px;
+    }
+
+    .wrapper .overlay {
+        padding: 12px 18px;
+    }
+
+    .logo-img {
+        width: 52px;
+        height: 52px;
+    }
+}
