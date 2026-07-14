@@ -26,7 +26,7 @@ Rolando Martí M.
 |---|---|
 | Backend | Java + Spring Boot |
 | Frontend | HTML, CSS, Bootstrap, JavaScript |
-| Base de datos / Firebase |
+| Base de datos | MySQL - Firebase |
 
 ---
 
