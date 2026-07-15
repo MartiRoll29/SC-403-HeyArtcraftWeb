@@ -1,4 +1,10 @@
 /* --- HEADER Y FOOTER --- */
+/* Si la ventana es más alta que el contenido, el sobrante bajo el footer
+   se ve olive (continuación del footer), nunca blanco */
+html {
+  background-color: #4f4f35;
+}
+
 /* Wrapper general para header y footer */
 .wrapper {
     position: relative;
@@ -51,30 +57,71 @@
 }
 
 /* --- HERO (Inicio, HU-06) --- */
-.hero {
-  background-color: #faf4eb;
-  padding: 70px 0;
+/* Un solo fondo cubriendo Hero + Conócenos + Destacados, sin costuras */
+.home-fondo-hojas {
+  background-image: url('/img/fondo.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  /* Franja de hojas visible antes del footer */
+  padding-bottom: 70px;
+}
+
+/* En el Home el header vive dentro del fondo continuo:
+   no debe duplicarlo con su propio recorte */
+.home-fondo-hojas .wrapper.header {
+  background-image: none;
+}
+
+/* En el Home la franja de hojas ya la da el fondo continuo:
+   el footer no debe duplicarla con su propio recorte */
+.home-fondo-hojas + .wrapper.footer {
+  height: 96px;
+  background-image: none;
+}
+
+.home-fondo-hojas + .wrapper.footer .overlay {
+  height: 96px;
+}
+
+.home-fondo-hojas + .wrapper.footer .background {
+  display: none;
+}
+
+.hero-seccion {
+  padding: 60px 0;
+}
+
+.hero-card {
+  background-color: #fff;
+  border-radius: 0;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
+  padding: 40px;
+  outline: 1.5px solid #3a2418;
+  outline-offset: -15px;
+}
+
+.hero-img-circle {
+  width: 220px;
+  height: 220px;
+  object-fit: cover;
+  border-radius: 50%;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
 }
 
 .hero-titulo {
   font-family: 'Poppins', sans-serif;
-  font-weight: 600;
-  font-size: 2.5rem;
-  color: #4f4f35;
-  margin-bottom: 20px;
+  font-weight: 700;
+  font-size: 1.75rem;
+  color: #3a2418;
+  margin-bottom: 14px;
 }
 
 .hero-subtitulo {
   font-family: 'Poppins', sans-serif;
-  font-size: 1.15rem;
-  color: #3a2418;
-  margin-bottom: 30px;
-}
-
-.hero-img {
-  max-width: 100%;
-  border-radius: 16px;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+  font-size: 1rem;
+  color: #4f4f35;
+  margin-bottom: 24px;
 }
 
 .btn-hero-cta {
@@ -82,7 +129,7 @@
   color: #fff;
   font-family: 'Poppins', sans-serif;
   font-weight: 600;
-  padding: 12px 28px;
+  padding: 10px 26px;
   border-radius: 50px;
   border: none;
 }
@@ -92,13 +139,15 @@
   color: #fff;
 }
 
-/* --- HISTORIA (Inicio, HU-07) --- */
-.historia {
-  background-color: #4f4f35;
-  padding: 70px 0;
+/* --- CONÓCENOS (Inicio, HU-07 y HU-08) --- */
+.conocenos {
+  background-color: #3a2418;
+  padding: 37px 0;
+  /* Deja ver la franja de hojas del fondo compartido antes de Destacados */
+  margin-bottom: 70px;
 }
 
-.historia-titulo {
+.conocenos-titulo {
   font-family: 'Poppins', sans-serif;
   font-weight: 600;
   font-size: 2rem;
@@ -106,31 +155,76 @@
   margin-bottom: 20px;
 }
 
-.historia-parrafo {
+.conocenos-texto {
   font-family: 'Poppins', sans-serif;
-  font-size: 1.05rem;
+  font-size: 1rem;
   color: #e8dcc5;
-  line-height: 1.6;
+  line-height: 1.7;
+  max-width: 760px;
+  margin: 0 auto 30px auto;
 }
 
-.historia-img {
-  max-width: 100%;
-  border-radius: 16px;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+.social-icons-conocenos {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+}
+
+.social-icon-circle {
+  width: 46px;
+  height: 46px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background-color: #fff;
+  color: #3a2418;
+  font-size: 1.2rem;
+  text-decoration: none;
+  transition: transform 0.2s ease;
+}
+
+.social-icon-circle:hover {
+  color: #3a2418;
+  text-decoration: none;
+  transform: scale(1.08);
 }
 
 /* --- PRODUCTOS DESTACADOS (Inicio, HU-09) --- */
 .destacados {
-  background-color: #faf4eb;
+  background-color: #fff;
   padding: 70px 0;
 }
 
 .destacados-titulo {
+  position: relative;
   font-family: 'Poppins', sans-serif;
   font-weight: 600;
   font-size: 2rem;
   color: #4f4f35;
-  margin-bottom: 40px;
+  padding-bottom: 8px;
+  display: inline-block;
+  margin: 0 auto 40px auto;
+}
+
+.destacados-titulo::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  transform: translateX(-50%);
+  width: 120%;
+  height: 3px;
+  background-color: #3a2418;
+}
+
+/* Recuadros de producto un poco más grandes solo en Productos Destacados */
+.destacados .producto-card {
+  width: 16.5rem;
+}
+
+.destacados .producto-img {
+  height: 210px;
 }
 
 /* ==================================================
