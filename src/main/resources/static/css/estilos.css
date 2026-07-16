@@ -1,0 +1,470 @@
+/* --- HEADER Y FOOTER --- */
+/* Si la ventana es más alta que el contenido, el sobrante bajo el footer
+   se ve olive (continuación del footer), nunca blanco */
+html {
+  background-color: #4f4f35;
+}
+
+/* Wrapper general para header y footer */
+.wrapper {
+    position: relative;
+    background-image: url('/img/fondo.jpg');
+    background-size: cover;
+    background-position: center;
+}
+
+/* Bloque verde sólido encima */
+.wrapper .overlay {
+    background-color: #4f4f35;
+    padding: 15px 50px;   
+}
+
+/* - Header - */
+.wrapper.header {
+  padding: 20px 80px; 
+}
+
+/* - Footer - */
+.wrapper.footer {
+  position: relative;
+  height: 200px; 
+}
+
+/* Fondo de hojas solo arriba */
+.wrapper.footer .background {
+  background-image: url('/img/fondo.jpg');
+  background-size: cover;
+  background-position: top center;
+  height: 80px; 
+  width: 100%;
+}
+
+/* Bloque verde */
+.wrapper.footer .overlay {
+  background-color: #4f4f35;
+  height: 120px;
+  display: flex;
+  align-items: center;
+  padding: 0 150px;
+}
+
+/* Logo circular */
+.logo-img {
+    height: 60px;
+    width: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+/* --- HERO (Inicio, HU-06) --- */
+/* Un solo fondo cubriendo Hero + Conócenos + Destacados, sin costuras */
+.home-fondo-hojas {
+  background-image: url('/img/fondo.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  /* Franja de hojas visible antes del footer */
+  padding-bottom: 70px;
+}
+
+/* En el Home el header vive dentro del fondo continuo:
+   no debe duplicarlo con su propio recorte */
+.home-fondo-hojas .wrapper.header {
+  background-image: none;
+}
+
+/* En el Home la franja de hojas ya la da el fondo continuo:
+   el footer no debe duplicarla con su propio recorte */
+.home-fondo-hojas + .wrapper.footer {
+  height: 96px;
+  background-image: none;
+}
+
+.home-fondo-hojas + .wrapper.footer .overlay {
+  height: 96px;
+}
+
+.home-fondo-hojas + .wrapper.footer .background {
+  display: none;
+}
+
+.hero-seccion {
+  padding: 60px 0;
+}
+
+.hero-card {
+  background-color: #fff;
+  border-radius: 0;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
+  padding: 40px;
+  outline: 1.5px solid #3a2418;
+  outline-offset: -15px;
+}
+
+.hero-img-circle {
+  width: 220px;
+  height: 220px;
+  object-fit: cover;
+  border-radius: 50%;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.hero-titulo {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  font-size: 1.75rem;
+  color: #3a2418;
+  margin-bottom: 14px;
+}
+
+.hero-subtitulo {
+  font-family: 'Poppins', sans-serif;
+  font-size: 1rem;
+  color: #4f4f35;
+  margin-bottom: 24px;
+}
+
+.btn-hero-cta {
+  background-color: #3a2418;
+  color: #fff;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  padding: 10px 26px;
+  border-radius: 50px;
+  border: none;
+}
+
+.btn-hero-cta:hover {
+  background-color: #2c1b12;
+  color: #fff;
+}
+
+/* --- CONÓCENOS (Inicio, HU-07 y HU-08) --- */
+.conocenos {
+  background-color: #3a2418;
+  padding: 37px 0;
+  /* Deja ver la franja de hojas del fondo compartido antes de Destacados */
+  margin-bottom: 70px;
+}
+
+.conocenos-titulo {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  font-size: 2rem;
+  color: #faf4eb;
+  margin-bottom: 20px;
+}
+
+.conocenos-texto {
+  font-family: 'Poppins', sans-serif;
+  font-size: 1rem;
+  color: #e8dcc5;
+  line-height: 1.7;
+  max-width: 760px;
+  margin: 0 auto 30px auto;
+}
+
+.social-icons-conocenos {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+}
+
+.social-icon-circle {
+  width: 46px;
+  height: 46px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background-color: #fff;
+  color: #3a2418;
+  font-size: 1.2rem;
+  text-decoration: none;
+  transition: transform 0.2s ease;
+}
+
+.social-icon-circle:hover {
+  color: #3a2418;
+  text-decoration: none;
+  transform: scale(1.08);
+}
+
+/* --- PRODUCTOS DESTACADOS (Inicio, HU-09) --- */
+.destacados {
+  background-color: #fff;
+  padding: 70px 0;
+}
+
+.destacados-titulo {
+  position: relative;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  font-size: 2rem;
+  color: #4f4f35;
+  padding-bottom: 8px;
+  display: inline-block;
+  margin: 0 auto 40px auto;
+}
+
+.destacados-titulo::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  transform: translateX(-50%);
+  width: 120%;
+  height: 3px;
+  background-color: #3a2418;
+}
+
+/* Recuadros de producto un poco más grandes solo en Productos Destacados */
+.destacados .producto-card {
+  width: 16.5rem;
+}
+
+.destacados .producto-img {
+  height: 210px;
+}
+
+/* ==================================================
+   NAVEGACIÓN PRINCIPAL - HU-04 Y HU-05
+   ================================================== */
+
+.header .overlay {
+    border-radius: 2px;
+}
+
+.header .navbar {
+    padding: 0;
+    font-family: 'Poppins', sans-serif;
+}
+
+.header .navbar-brand {
+    padding: 0;
+    margin-right: 2rem;
+}
+
+.header .navbar-nav {
+    gap: 0.15rem;
+}
+
+.header .nav-link {
+    color: #ffffff;
+    font-size: 0.95rem;
+    font-weight: 500;
+    padding: 0.65rem 0.85rem !important;
+    border-radius: 999px;
+    transition: background-color 0.2s ease,
+                color 0.2s ease;
+}
+
+.header .nav-link:hover,
+.header .nav-link:focus-visible {
+    color: #ffffff;
+    background-color: rgba(255, 255, 255, 0.14);
+}
+
+.header .nav-perfil {
+    font-size: 1.25rem;
+    line-height: 1;
+}
+
+.header .navbar-toggler {
+    border-color: rgba(255, 255, 255, 0.7);
+}
+
+.header .navbar-toggler:focus {
+    box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.2);
+}
+
+.carrito-badge {
+    position: absolute;
+    top: -0.1rem;
+    right: -0.15rem;
+    font-size: 0.65rem;
+}
+
+/* Ajustes para pantallas medianas */
+@media (max-width: 1199.98px) {
+
+    .wrapper.header {
+        padding: 20px 40px;
+    }
+}
+
+/* Menú desplegable para tabletas y celulares */
+@media (max-width: 991.98px) {
+
+    .header .navbar-collapse {
+        padding-top: 1rem;
+    }
+
+    .header .navbar-nav {
+        align-items: stretch !important;
+    }
+
+    .header .nav-link {
+        display: block;
+        text-align: center;
+    }
+
+    .carrito-badge {
+        position: static;
+        margin-left: 0.35rem;
+    }
+}
+
+/* Ajustes para celulares pequeños */
+@media (max-width: 575.98px) {
+
+    .wrapper.header {
+        padding: 12px;
+    }
+
+    .wrapper .overlay {
+        padding: 12px 18px;
+    }
+
+    .logo-img {
+        width: 52px;
+        height: 52px;
+    }
+}
+
+
+/* --- CATALOGO --- */
+/* - Body - */
+/* Título de categoría */
+.categoria-titulo {
+  color:#3a2417;
+  font-weight: bold;
+  border-bottom: 3px solid #3a2417;
+  padding-bottom: 5px;          
+  display: inline-block;   
+  margin: 0 auto 20px auto;
+}
+
+/* Card de producto */
+.producto-card {
+  width: 14rem;
+  background-color: #ffffff; 
+  color: #333;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  transition: transform 0.2s ease;
+  margin: 20px;              
+  box-shadow: 0 4px 4px rgba(0,0,0,0.1); 
+}
+
+.producto-card:hover {
+  transform: scale(1.05);
+}
+
+.producto-card .card-title {
+    font-size: 1rem;
+    margin-top: 10px;
+}
+
+.producto-img {
+  width: 100%;               
+  height: 180px;             
+  object-fit: cover;         
+  border-bottom: 1px solid #ccc;
+}
+
+.categoria-divider {
+  border: none;
+  border-top: 3px solid #3a2417; 
+  margin: 40px 0;             
+  width: 100%; 
+  opacity: 1;
+}
+
+/* Botón agregar producto */
+.btn-success.rounded-circle {
+  width: 45px;
+  height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #4f4f35;
+}
+
+/* Botón agregar categoría */
+.btn-success.rounded-pill {
+  font-weight: bold;
+  background-color: #4f4f35;
+}
+
+.btn-success,
+.btn-success:hover,
+.btn-success:focus,
+.btn-success:active {
+    background-color: #4f4f35 !important;
+    border-color: #4f4f35 !important;
+    color: #fff !important;
+}
+
+/* - Modales - */
+.modal-header {
+  background-color: #4f4f35 !important;
+  color: #fff !important;               
+}
+
+.btn-custom {
+  background-color: #4f4f35 !important; 
+  color: #fff !important;               
+  border: none !important;
+}
+
+.btn-custom:hover {
+  background-color: #3a3a28 !important;
+  color: #fff !important;
+}
+
+/* - Detalle Producto - */
+/* Imagen del producto */
+.img-detalle {
+  max-width: 100%;
+  height: 500px;          
+  object-fit: cover;      
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+/* Botón volver al catálogo */
+.btn-link {
+  color: #3a2417 !important;   /* café oscuro */
+  text-decoration: none !important;
+  font-weight: 600;
+}
+
+.btn-link:hover {
+  color: #4f4f35 !important;   /* verde oscuro */
+  text-decoration: underline !important;
+}
+
+/* --- CARRITO --- */
+/* - Vacio - */
+/* Alerta transparente */
+.alert-custom {
+  background-color: rgba(58, 36, 23, 0.2); 
+  color: #3a2417;                          
+  border: 1px solid #3a2417;
+  border-radius: 6px;
+  padding: 15px;
+  font-weight: 500;
+}
+
+.alert-link-custom {
+  color: #3a2417;
+   font-weight: 700;        
+}
+
+.img-carrito {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 6px;
+}
