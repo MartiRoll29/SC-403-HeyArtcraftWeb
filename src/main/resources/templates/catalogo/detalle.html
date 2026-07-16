@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{general/fragmentos :: head}"></head>
+<body>
+    <header th:replace="~{general/fragmentos :: header}"></header>
+
+    <div class="container my-5">
+        <a th:href="@{/catalogo}" class="btn btn-link mb-3"><i class="fa-solid fa-arrow-left"></i> Volver al catálogo</a>
+
+        <div class="row g-4">
+            <div class="col-md-6 d-flex justify-content-center">
+                <img th:src="@{${producto.imagen}}" alt="Imagen producto" class="img-detalle rounded shadow-sm"/>
+            </div>
+            <div class="col-md-6">
+                <h3 th:text="${producto.nombre}" class="categoria-titulo"></h3>
+                <p class="text-muted" th:if="${producto.descripcion != null}" th:text="${producto.descripcion}"></p>
+                <p class="fs-3 fw-bold"
+                   th:text="${'₡' + #numbers.formatDecimal(producto.precio, 1, 'COMMA', 0, 'POINT')}">
+                    ₡0
+                </p>
+
+                <form th:action="@{/carrito/agregar}" method="post" class="mt-4">
+                    <input type="hidden" name="productoId" th:value="${producto.id}"/>
+
+                    <div class="mb-3" th:if="${producto.personalizable}">
+                        <label for="textoPersonalizado" class="form-label fw-semibold">Texto personalizado</label>
+                        <input type="text" class="form-control" id="textoPersonalizado" name="textoPersonalizado"
+                               placeholder="Ej: Familia Rodríguez / Nombres / Fecha" maxlength="255"/>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="tamanoSeleccionado" class="form-label fw-semibold">Tamaño</label>
+                        <select class="form-select" id="tamanoSeleccionado" name="tamanoSeleccionado">
+                            <option th:if="${producto.tamanosDisponibles != null}"
+                                    th:each="tamano : ${#strings.arraySplit(producto.tamanosDisponibles, ',')}"
+                                    th:value="${tamano}" th:text="${tamano}">
+                            </option>
+                            <option th:unless="${producto.tamanosDisponibles != null}" value="Único">Único</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="especificaciones" class="form-label fw-semibold">Especificaciones adicionales</label>
+                        <textarea class="form-control" id="especificaciones" name="especificaciones" rows="3"
+                                  placeholder="Color, detalles especiales, referencias, etc."></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-custom btn-lg">
+                        <i class="fa-solid fa-cart-plus"></i> Añadir al carrito
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <footer th:replace="~{general/fragmentos :: footer}"></footer>
+</body>
+</html>
