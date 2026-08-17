@@ -31,6 +31,13 @@ import java.util.List;
 @NoArgsConstructor
 public class Pedido {
 
+    /** Módulo 10 (HU-26): estado inicial, a la espera de ser atendido. */
+    public static final String ESTADO_PENDIENTE = "CONFIRMADO";
+    /** Módulo 10 (HU-27): el administrador ya atendió/entregó el pedido. */
+    public static final String ESTADO_COMPLETADO = "COMPLETADO";
+    /** Módulo 10 (HU-28): el administrador no procesará el pedido. */
+    public static final String ESTADO_CANCELADO = "CANCELADO";
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -65,7 +72,7 @@ public class Pedido {
     private BigDecimal total;
 
     @Column(nullable = false, length = 30)
-    private String estado = "CONFIRMADO";
+    private String estado = ESTADO_PENDIENTE;
 
     @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<DetallePedido> detalles = new ArrayList<>();

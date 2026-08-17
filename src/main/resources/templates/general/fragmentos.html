@@ -108,6 +108,15 @@
                                     </a>
                                 </li>
 
+                                <!-- Gestión de pedidos (Módulo 10 y 11): solo para el rol ADMIN -->
+                                <li class="nav-item" sec:authorize="hasRole('ADMIN')">
+                                    <a class="nav-link" th:href="@{/pedidos/admin}">
+                                        <i class="fa-solid fa-clipboard-list"
+                                           aria-hidden="true"></i>
+                                        [[#{plantilla.pedidosAdmin}]]
+                                    </a>
+                                </li>
+
                                 <!-- HU-16: visitante sin sesion iniciada -->
                                 <li class="nav-item" sec:authorize="!isAuthenticated()">
                                     <a class="nav-link" th:href="@{/login}">

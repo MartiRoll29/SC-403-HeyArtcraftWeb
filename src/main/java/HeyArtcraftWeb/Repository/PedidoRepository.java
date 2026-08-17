@@ -27,4 +27,28 @@ public interface PedidoRepository extends JpaRepository<Pedido, Integer> {
             + "LEFT JOIN FETCH d.producto pr "
             + "WHERE p.id = :id")
     Optional<Pedido> findByIdConDetalle(@Param("id") Integer id);
+
+    // HU-26: pedidos pendientes, del más antiguo al más reciente
+    List<Pedido> findByEstadoOrderByFechaCreacionAsc(String estado);
+
+    // HU-29: historial (completados y cancelados), en orden ascendente
+    List<Pedido> findByEstadoInOrderByFechaCreacionAsc(List<String> estados);
+
+    /**
+     * HU-30: busca dentro del historial por nombre/apellidos del cliente o
+     * por nombre de la categoría de alguno de los productos del pedido. El
+     * join de categoría solo se usa para filtrar (no lleva FETCH), así que
+     * los detalles completos del pedido igual se cargan enteros gracias a
+     * que la colección está mapeada como EAGER en Pedido.
+     */
+    @Query("SELECT DISTINCT p FROM Pedido p "
+            + "LEFT JOIN p.usuario u "
+            + "LEFT JOIN p.detalles d "
+            + "LEFT JOIN d.producto pr "
+            + "LEFT JOIN pr.categoria cat "
+            + "WHERE p.estado IN :estados AND ("
+            + "LOWER(CONCAT(u.nombre, ' ', u.apellidos)) LIKE LOWER(CONCAT('%', :texto, '%')) "
+            + "OR LOWER(cat.nombre) LIKE LOWER(CONCAT('%', :texto, '%'))) "
+            + "ORDER BY p.fechaCreacion ASC")
+    List<Pedido> buscarEnHistorial(@Param("estados") List<String> estados, @Param("texto") String texto);
 }

@@ -39,7 +39,9 @@ public class SecurityConfig {
     private static final String[] ADMIN_URLS = {
         "/producto/guardar", "/producto/eliminar", "/producto/modificar/**",
         "/categoria/guardar", "/categoria/eliminar", "/categoria/modificar/**",
-        "/usuario/**"
+        "/usuario/**",
+        // Módulo 10 y 11: gestión e historial de pedidos (HU-26 a HU-30)
+        "/pedidos/admin/**"
     };
 
     @Bean
