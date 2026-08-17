@@ -6,6 +6,7 @@ import HeyArtcraftWeb.Domain.Pedido;
 import HeyArtcraftWeb.Domain.Producto;
 import HeyArtcraftWeb.Service.PedidoService;
 import HeyArtcraftWeb.Service.ProductoService;
+import HeyArtcraftWeb.Service.UsuarioService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,11 +22,14 @@ public class CarritoController {
 
     private final ProductoService productoService;
     private final PedidoService pedidoService;
+    private final UsuarioService usuarioService;
     private final CarritoSesion carritoSesion;
 
-    public CarritoController(ProductoService productoService, PedidoService pedidoService, CarritoSesion carritoSesion) {
+    public CarritoController(ProductoService productoService, PedidoService pedidoService,
+            UsuarioService usuarioService, CarritoSesion carritoSesion) {
         this.productoService = productoService;
         this.pedidoService = pedidoService;
+        this.usuarioService = usuarioService;
         this.carritoSesion = carritoSesion;
     }
 
@@ -76,7 +80,9 @@ public class CarritoController {
             return "redirect:/carrito";
         }
 
-        Pedido pedido = pedidoService.confirmarCompra(carritoSesion, Boolean.TRUE.equals(incluyeEnvio));
+        // Modulo 7 (HU-18): la ruta exige sesion iniciada, asi el pedido queda con dueno
+        Pedido pedido = pedidoService.confirmarCompra(carritoSesion,
+                Boolean.TRUE.equals(incluyeEnvio), usuarioService.getUsuarioAutenticado());
 
         model.addAttribute("items", carritoSesion.getItems());
         model.addAttribute("subtotal", carritoSesion.calcularSubtotal());

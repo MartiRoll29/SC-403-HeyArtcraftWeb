@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+    <head th:replace="~{general/fragmentos:: head}"/>
+    <body>
+        <header th:replace="~{general/fragmentos:: header}"/>
+
+        <div class="container my-5">
+            <div class="row justify-content-center">
+                <div class="col-md-5">
+                    <div class="card shadow-sm w-100">
+                        <div class="card-body p-4">
+                            <h3 class="categoria-titulo mb-4">[[#{login.titulo}]]</h3>
+
+                            <div th:if="${param.error}" class="alert alert-custom">
+                                [[#{login.error}]]
+                            </div>
+                            <div th:if="${param.logout}" class="alert alert-custom">
+                                [[#{login.logout}]]
+                            </div>
+
+                            <form th:action="@{/login}" method="post">
+                                <label class="form-label" for="username">[[#{login.usuario}]]</label>
+                                <input type="text" id="username" name="username"
+                                       class="form-control" required="required" autofocus="autofocus"/>
+
+                                <label class="form-label mt-3" for="password">[[#{login.password}]]</label>
+                                <input type="password" id="password" name="password"
+                                       class="form-control" required="required"/>
+
+                                <button type="submit" class="btn btn-custom w-100 mt-4">
+                                    <i class="fa-solid fa-right-to-bracket"></i> [[#{login.entrar}]]
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer th:replace="~{general/fragmentos:: footer}"/>
+    </body>
+</html>

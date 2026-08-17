@@ -47,6 +47,21 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-data-jpa</artifactId>
             </dependency>
+            <!-- Modulo 7: autenticacion y control de acceso -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-security</artifactId>
+            </dependency>
+            <dependency>
+                <groupId>org.thymeleaf.extras</groupId>
+                <artifactId>thymeleaf-extras-springsecurity6</artifactId>
+            </dependency>
+            <!-- HU-19: generacion de la factura en PDF -->
+            <dependency>
+                <groupId>com.github.librepdf</groupId>
+                <artifactId>openpdf</artifactId>
+                <version>2.0.3</version>
+            </dependency>
             <dependency>
                 <groupId>com.mysql</groupId>
                 <artifactId>mysql-connector-j</artifactId>
@@ -60,6 +75,15 @@
                 <groupId>org.hibernate.validator</groupId>
                 <artifactId>hibernate-validator</artifactId>
                 <scope>runtime</scope>
+            </dependency>
+            <!--
+                hibernate-validator es runtime, por lo que la API de Bean
+                Validation no llegaba al classpath de compilacion. Se declara
+                aparte para poder anotar las entidades (@NotBlank, @Email).
+            -->
+            <dependency>
+                <groupId>jakarta.validation</groupId>
+                <artifactId>jakarta.validation-api</artifactId>
             </dependency>
             <dependency>
                 <groupId>org.projectlombok</groupId>

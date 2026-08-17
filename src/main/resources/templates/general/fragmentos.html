@@ -99,16 +99,67 @@
                                     </a>
                                 </li>
                                 
-                                <!-- El perfil dirige temporalmente al administrador -->
-                                <li class="nav-item">
-                                    <a class="nav-link nav-perfil"
-                                       th:href="@{/catalogo/listado}"
-                                       title="Acceso administrativo temporal"
+                                <!-- Catalogo administrativo: solo para el rol ADMIN -->
+                                <li class="nav-item" sec:authorize="hasRole('ADMIN')">
+                                    <a class="nav-link" th:href="@{/catalogo/listado}">
+                                        <i class="fa-solid fa-screwdriver-wrench"
+                                           aria-hidden="true"></i>
+                                        [[#{plantilla.admin}]]
+                                    </a>
+                                </li>
+
+                                <!-- HU-16: visitante sin sesion iniciada -->
+                                <li class="nav-item" sec:authorize="!isAuthenticated()">
+                                    <a class="nav-link" th:href="@{/login}">
+                                        <i class="fa-solid fa-circle-user"
+                                           aria-hidden="true"></i>
+                                        [[#{plantilla.iniciarSesion}]]
+                                    </a>
+                                </li>
+
+                                <!-- HU-16 y HU-20: menu del cliente autenticado -->
+                                <li class="nav-item dropdown" sec:authorize="isAuthenticated()">
+                                    <a class="nav-link dropdown-toggle"
+                                       href="#"
+                                       role="button"
+                                       data-bs-toggle="dropdown"
+                                       aria-expanded="false"
                                        th:attr="aria-label=#{plantilla.perfil}">
 
                                         <i class="fa-solid fa-circle-user"
                                            aria-hidden="true"></i>
+                                        <span sec:authentication="name">usuario</span>
                                     </a>
+
+                                    <ul class="dropdown-menu dropdown-menu-end">
+                                        <li>
+                                            <a class="dropdown-item" th:href="@{/perfil}">
+                                                <i class="fa-solid fa-id-card"></i>
+                                                [[#{perfil.titulo}]]
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item" th:href="@{/perfil/password}">
+                                                <i class="fa-solid fa-key"></i>
+                                                [[#{perfil.cambiarPassword}]]
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item" th:href="@{/perfil/pedidos}">
+                                                <i class="fa-solid fa-receipt"></i>
+                                                [[#{perfil.historial}]]
+                                            </a>
+                                        </li>
+                                        <li><hr class="dropdown-divider"/></li>
+                                        <li>
+                                            <form th:action="@{/logout}" method="post" class="px-3 pt-1">
+                                                <button type="submit" class="btn btn-custom btn-sm w-100">
+                                                    <i class="fa-solid fa-right-from-bracket"></i>
+                                                    [[#{perfil.cerrarSesion}]]
+                                                </button>
+                                            </form>
+                                        </li>
+                                    </ul>
                                 </li>
 
                             </ul>
