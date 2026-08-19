@@ -1,5 +1,6 @@
 package HeyArtcraftWeb;
 
+import HeyArtcraftWeb.Service.CustomOAuth2UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -18,7 +19,7 @@ public class SecurityConfig {
     /** Páginas y recursos que cualquier visitante puede ver sin iniciar sesión. */
     private static final String[] PUBLIC_URLS = {
         "/", "/index", "/catalogo/**", "/css/**", "/js/**", "/img/**",
-        "/webjars/**", "/login", "/acceso_denegado", "/error", "/favicon.ico"
+        "/webjars/**", "/login", "/oauth2/", "/registro", "/acceso_denegado", "/error", "/favicon.ico"
     };
 
     /**
@@ -43,7 +44,16 @@ public class SecurityConfig {
         // Módulo 10 y 11: gestión e historial de pedidos (HU-26 a HU-30)
         "/pedidos/admin/**"
     };
+    
+    private final CustomOAuth2UserService customOAuth2UserService;
 
+    public SecurityConfig(CustomOAuth2UserService customOAuth2UserService) {
+        this.customOAuth2UserService = customOAuth2UserService;
+    }
+
+    /**
+     * Bean para encriptar contraseñas de usuarios locales
+     */
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -64,6 +74,11 @@ public class SecurityConfig {
                         .defaultSuccessUrl("/", true)
                         .failureUrl("/login?error=true")
                         .permitAll())
+                .oauth2Login(oauth2 -> oauth2
+                .loginPage("/login")
+                .userInfoEndpoint(userInfo -> userInfo
+                .userService(customOAuth2UserService))
+                .defaultSuccessUrl("/", true))             
                 // HU-20: cerrar sesión y volver a la pantalla de login
                 .logout(logout -> logout
                         .logoutUrl("/logout")

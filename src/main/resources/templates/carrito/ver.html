@@ -64,7 +64,7 @@
                                 <!-- Envío con costo -->
                                 <div class="form-check">
                                     <input class="form-check-input" type="radio" id="incluyeEnvio" name="metodoEntrega"
-                                           value="envio" th:attr="data-costo-envio=${costoEnvio}" checked/>
+                                           value="envio" th:attr="data-costo-envio=${costoEnvio}"/>
                                     <small class="text-muted" for="incluyeEnvio">
                                         Correos de Costa Rica 
                                         (<span th:text="${'₡' + #numbers.formatDecimal(costoEnvio, 1, 'COMMA', 0, 'POINT')}">₡0</span>)
@@ -73,7 +73,7 @@
 
                                 <!-- Recoger sin costo -->
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" id="recoger" name="metodoEntrega" value="recoger"/>
+                                    <input class="form-check-input" type="radio" id="recoger" name="metodoEntrega" value="recoger" checked/>
                                     <small class="form-check-label" for="recoger">
                                         Recoger (sin costo)
                                     </small>
@@ -124,19 +124,25 @@
     <footer th:replace="~{general/fragmentos :: footer}"></footer>
 
     <script th:if="${not #lists.isEmpty(items)}">
-        const checkboxEnvio = document.getElementById('incluyeEnvio');
-        const totalTexto = document.getElementById('totalTexto');
-        const subtotal = parseFloat(document.getElementById('subtotalTexto').dataset.subtotal);
-        const costoEnvio = parseFloat(checkboxEnvio.dataset.costoEnvio);
+    const radiosEntrega = document.querySelectorAll('input[name="metodoEntrega"]');
+    const totalTexto = document.getElementById('totalTexto');
+    const subtotal = parseFloat(document.getElementById('subtotalTexto').dataset.subtotal);
+    const costoEnvio = parseFloat(document.getElementById('incluyeEnvio').dataset.costoEnvio);
 
-        function formatearColones(valor) {
-            return '₡' + valor.toLocaleString('es-CR', { maximumFractionDigits: 0 });
-        }
+    function formatearColones(valor) {
+        return '₡' + valor.toLocaleString('es-CR', { maximumFractionDigits: 0 });
+    }
 
-        checkboxEnvio.addEventListener('change', function () {
-            const total = checkboxEnvio.checked ? subtotal + costoEnvio : subtotal;
-            totalTexto.innerHTML = '<span>' + formatearColones(total) + '</span>';
+    radiosEntrega.forEach(radio => {
+        radio.addEventListener('change', function () {
+            if (this.value === "envio") {
+                const total = subtotal + costoEnvio;
+                totalTexto.innerHTML = '<span>' + formatearColones(total) + '</span>';
+            } else {
+                totalTexto.innerHTML = '<span>' + formatearColones(subtotal) + '</span>';
+            }
         });
+    });
     </script>
 
     <script th:if="${pedidoConfirmado != null}">

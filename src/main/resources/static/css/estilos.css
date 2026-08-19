@@ -5,6 +5,10 @@ html {
   background-color: #4f4f35;
 }
 
+.container {
+    flex: 1;
+}
+
 /* Wrapper general para header y footer */
 .wrapper {
     position: relative;
@@ -28,6 +32,7 @@ html {
 .wrapper.footer {
   position: relative;
   height: 200px; 
+  margin-top: auto;
 }
 
 /* Fondo de hojas solo arriba */
@@ -54,6 +59,50 @@ html {
     width: 60px;
     border-radius: 50%;
     object-fit: cover;
+}
+
+/* --- LOGIN / REGISTRO --- */
+/* Fondo izquierdo */
+.bg-left {
+    background-color: #4f4f35 !important;
+}
+
+.bg-registro{
+    background-color: #3a2417;
+}
+.logo-login {
+    width: 450px;
+    height: 450px;
+    border-radius: 50%; /* círculo */
+    object-fit: contain; /* ajusta dentro del círculo */
+}
+
+/* Card login */
+.login-card {
+    background-color: #ffffff;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 600px;
+}
+
+/* Botón login */
+.btn-login {
+    background-color: #3a2418;
+    color: #fff;
+}
+.btn-login:hover {
+    background-color: #5a3f30;
+    color: #fff;
+}
+
+/* Botón registro */
+.btn-registro {
+    background-color: #4f4f35;
+    color: #fff;    
+}
+.btn-registro:hover {
+    background-color: #3d3d28;
+    color: #fff;
 }
 
 /* --- HERO (Inicio, HU-06) --- */
@@ -343,6 +392,7 @@ html {
   padding-bottom: 5px;          
   display: inline-block;   
   margin: 0 auto 20px auto;
+  text-align: center;
 }
 
 /* Card de producto */

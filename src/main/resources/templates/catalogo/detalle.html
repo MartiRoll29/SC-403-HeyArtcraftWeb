@@ -25,12 +25,12 @@
                     <div class="mb-3" th:if="${producto.personalizable}">
                         <label for="textoPersonalizado" class="form-label fw-semibold">Texto personalizado</label>
                         <input type="text" class="form-control" id="textoPersonalizado" name="textoPersonalizado"
-                               placeholder="Ej: Familia Rodríguez / Nombres / Fecha" maxlength="255"/>
+                               placeholder="Ej: Familia Rodríguez / Nombres / Fecha" maxlength="255" required/>
                     </div>
 
                     <div class="mb-3">
                         <label for="tamanoSeleccionado" class="form-label fw-semibold">Tamaño</label>
-                        <select class="form-select" id="tamanoSeleccionado" name="tamanoSeleccionado">
+                        <select class="form-select" id="tamanoSeleccionado" name="tamanoSeleccionado" required>
                             <option th:if="${producto.tamanosDisponibles != null}"
                                     th:each="tamano : ${#strings.arraySplit(producto.tamanosDisponibles, ',')}"
                                     th:value="${tamano}" th:text="${tamano}">
@@ -42,7 +42,7 @@
                     <div class="mb-3">
                         <label for="especificaciones" class="form-label fw-semibold">Especificaciones adicionales</label>
                         <textarea class="form-control" id="especificaciones" name="especificaciones" rows="3"
-                                  placeholder="Color, detalles especiales, referencias, etc."></textarea>
+                                  placeholder="Color, detalles especiales, referencias, etc." required></textarea>
                     </div>
 
                     <button type="submit" class="btn btn-custom btn-lg">

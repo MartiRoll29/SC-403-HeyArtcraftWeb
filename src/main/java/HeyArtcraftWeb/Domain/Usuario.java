@@ -44,12 +44,10 @@ public class Usuario {
     @Column(length = 512)
     private String password;
 
-    @NotBlank
-    @Column(nullable = false, length = 60)
+    @Column(length = 60)
     private String nombre;
 
-    @NotBlank
-    @Column(nullable = false, length = 60)
+    @Column (length = 60)
     private String apellidos;
 
     @Email
