@@ -95,17 +95,14 @@ public class ProductoService {
     public void delete(Integer idProducto) {
 
         Producto producto = productoRepository.findById(idProducto)
-                .orElseThrow(() -> new IllegalArgumentException(
-                "El producto con ID "
-                + idProducto
-                + " no existe."));
+                .orElse(null);
 
-        String imagen = producto.getImagen();
-
-        productoRepository.delete(producto);
-        productoRepository.flush();
-
-        eliminarImagenSinInterrumpir(imagen);
+        if (producto == null) {
+            LOGGER.warn(
+                    "Se intentó eliminar el producto {}, pero ya no existe",
+                    idProducto);
+            return;
+        }
     }
 
     @Transactional(readOnly = true)
