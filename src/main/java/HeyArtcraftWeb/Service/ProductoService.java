@@ -4,10 +4,9 @@ import HeyArtcraftWeb.Domain.Categoria;
 import HeyArtcraftWeb.Domain.Producto;
 import HeyArtcraftWeb.Repository.CategoriaRepository;
 import HeyArtcraftWeb.Repository.ProductoRepository;
-import java.io.File;
-import java.io.IOException;
 import java.util.List;
-import org.springframework.dao.DataIntegrityViolationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -15,60 +14,98 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 public class ProductoService {
 
+    private static final Logger LOGGER
+            = LoggerFactory.getLogger(ProductoService.class);
+
     private final ProductoRepository productoRepository;
     private final CategoriaRepository categoriaRepository;
+    private final FirebaseStorageService firebaseStorageService;
 
-    public ProductoService(ProductoRepository productoRepository, CategoriaRepository categoriaRepository) {
+    public ProductoService(
+            ProductoRepository productoRepository,
+            CategoriaRepository categoriaRepository,
+            FirebaseStorageService firebaseStorageService) {
+
         this.productoRepository = productoRepository;
         this.categoriaRepository = categoriaRepository;
+        this.firebaseStorageService = firebaseStorageService;
     }
 
+    @Transactional
     public void save(Producto producto, MultipartFile imagenFile) {
-        if (producto.getCategoria() == null || producto.getCategoria().getId() == null) {
-            throw new IllegalArgumentException("El id de la categoría no fue enviado correctamente");
+
+        if (producto.getCategoria() == null
+                || producto.getCategoria().getId() == null) {
+            throw new IllegalArgumentException(
+                    "El id de la categoría no fue enviado correctamente");
         }
 
         Integer categoriaId = producto.getCategoria().getId();
+
         Categoria categoria = categoriaRepository.findById(categoriaId)
-                .orElseThrow(() -> new IllegalArgumentException("Categoría no encontrada"));
+                .orElseThrow(() -> new IllegalArgumentException(
+                "Categoría no encontrada"));
+
         producto.setCategoria(categoria);
 
-        // Validar y guardar imagen
-        if (!imagenFile.isEmpty()) {
-            String contentType = imagenFile.getContentType();
-            if (contentType.equals("image/jpeg") || contentType.equals("image/png")) {
-                try {
-                    // Ruta absoluta a la carpeta static/img
-                    String rutaBase = new File("src/main/resources/static/img").getAbsolutePath();
-                    File destino = new File(rutaBase, imagenFile.getOriginalFilename());
+        String imagenAnterior = null;
 
-                    // Crear carpeta si no existe
-                    destino.getParentFile().mkdirs();
+        if (producto.getId() != null) {
+            Producto productoExistente
+                    = productoRepository.findById(producto.getId())
+                            .orElseThrow(() -> new IllegalArgumentException(
+                            "Producto no encontrado"));
 
-                    // Guardar archivo
-                    imagenFile.transferTo(destino);
-
-                    // Guardar solo el nombre del archivo en BD
-                    producto.setImagen("/img/" + imagenFile.getOriginalFilename());
-                } catch (IOException e) {
-                    throw new RuntimeException("Error al guardar la imagen", e);
-                }
-            } else {
-                throw new IllegalArgumentException("Solo se permiten imágenes JPG o PNG");
-            }
+            imagenAnterior = productoExistente.getImagen();
         }
-        productoRepository.save(producto);
+
+        boolean tieneNuevaImagen
+                = imagenFile != null && !imagenFile.isEmpty();
+
+        if (!tieneNuevaImagen) {
+            if (producto.getId() == null) {
+                throw new IllegalArgumentException(
+                        "Debe seleccionar una imagen");
+            }
+
+            producto.setImagen(imagenAnterior);
+            productoRepository.saveAndFlush(producto);
+            return;
+        }
+
+        String nuevaImagen
+                = firebaseStorageService.subirImagen(imagenFile);
+
+        producto.setImagen(nuevaImagen);
+
+        try {
+            productoRepository.saveAndFlush(producto);
+        } catch (RuntimeException e) {
+            eliminarImagenSinInterrumpir(nuevaImagen);
+            throw e;
+        }
+
+        if (imagenAnterior != null
+                && !imagenAnterior.equals(nuevaImagen)) {
+            eliminarImagenSinInterrumpir(imagenAnterior);
+        }
     }
 
     @Transactional
     public void delete(Integer idProducto) {
-        if (!productoRepository.existsById(idProducto)) {
-            throw new IllegalArgumentException("El producto con ID " + idProducto + " no existe.");
-        }
+
         Producto producto = productoRepository.findById(idProducto)
-                .orElseThrow(() -> new IllegalArgumentException("Producto no encontrado"));
-        // Eliminar el registro de la BD
-        productoRepository.deleteById(idProducto);
+                .orElseThrow(() -> new IllegalArgumentException(
+                "El producto con ID "
+                + idProducto
+                + " no existe."));
+
+        String imagen = producto.getImagen();
+
+        productoRepository.delete(producto);
+        productoRepository.flush();
+
+        eliminarImagenSinInterrumpir(imagen);
     }
 
     @Transactional(readOnly = true)
@@ -85,5 +122,15 @@ public class ProductoService {
     @Transactional(readOnly = true)
     public List<Producto> getProductosDestacados() {
         return productoRepository.findByDestacadoTrue();
+    }
+
+    private void eliminarImagenSinInterrumpir(String imagenUrl) {
+        try {
+            firebaseStorageService.eliminarImagen(imagenUrl);
+        } catch (RuntimeException e) {
+            LOGGER.warn(
+                    "No se pudo eliminar la imagen anterior de Firebase",
+                    e);
+        }
     }
 }
