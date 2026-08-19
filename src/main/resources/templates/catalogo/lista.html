@@ -5,7 +5,9 @@
     <header th:replace="~{general/fragmentos :: header}"></header>
 
     <div class="container my-4">
-        <h1 class="categoria-titulo mb-0 d-inline-flex align-items-center">Catálogo</h1>
+        <div class="text-center mb-2 mt-3">
+            <h1 class="categoria-titulo d-inline-flex align-items-center">Catálogo</h1>
+        </div>
 
         <div th:if="${#lists.isEmpty(productos)}" class="alert alert-warning text-center">
             Todavía no hay productos disponibles en el catálogo.
@@ -27,7 +29,6 @@
             </a>
         </div>
     </div>
-
     <footer th:replace="~{general/fragmentos :: footer}"></footer>
 </body>
 </html>

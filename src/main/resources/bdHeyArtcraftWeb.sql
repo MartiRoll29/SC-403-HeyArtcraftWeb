@@ -12,6 +12,92 @@ TO 'heyartcraftweb'@'localhost';
 FLUSH PRIVILEGES;
 USE heyartcraftweb;
 
+-- TABLA ROL
+CREATE TABLE rol (
+    id_rol INT AUTO_INCREMENT PRIMARY KEY,
+    rol VARCHAR(25) NOT NULL UNIQUE
+);
+
+-- TABLA USUARIO
+CREATE TABLE usuario (
+    id_usuario INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(30) NOT NULL UNIQUE,
+    password VARCHAR(512),
+    nombre VARCHAR(60),
+    apellidos VARCHAR(60),
+    correo VARCHAR(120) UNIQUE,
+    telefono VARCHAR(25),
+    ruta_imagen VARCHAR(1024),
+    activo BOOLEAN NOT NULL DEFAULT TRUE
+);
+
+-- TABLA USUARIO_ROL
+CREATE TABLE usuario_rol (
+    id_usuario INT NOT NULL,
+    id_rol INT NOT NULL,
+    PRIMARY KEY (id_usuario, id_rol),
+    FOREIGN KEY (id_usuario)
+        REFERENCES usuario(id_usuario)
+        ON DELETE CASCADE,
+    FOREIGN KEY (id_rol)
+        REFERENCES rol(id_rol)
+        ON DELETE CASCADE
+);
+
+-- ROLES PREDETERMINADOS
+INSERT INTO rol (rol)
+VALUES ('ADMIN'), ('CLIENTE');
+
+-- USUARIO CLIENTE: cliente / cliente123
+INSERT INTO usuario (
+    username,
+    password,
+    nombre,
+    apellidos,
+    correo,
+    activo
+)
+VALUES (
+    'cliente',
+    '$2b$10$MIaJcXDLtuujLip6Wqhvyuysy2HCHHSkX52pBUl6LpX06U9ZEhFHy',
+    'Cliente',
+    'Hey Artcraft',
+    'cliente@heyartcraft.local',
+    TRUE
+);
+
+-- USUARIO ADMIN: admin / admin123
+INSERT INTO usuario (
+    username,
+    password,
+    nombre,
+    apellidos,
+    correo,
+    activo
+)
+VALUES (
+    'admin',
+    '$2b$10$DGZ8gupVG5TM84PO2jO0I.M4R.AshQFrOEnrrBUHN4x54f/B3x4.a',
+    'Administrador',
+    'Hey Artcraft',
+    'admin@heyartcraft.local',
+    TRUE
+);
+
+-- ASIGNAR ROLES
+INSERT INTO usuario_rol (id_usuario, id_rol)
+SELECT u.id_usuario, r.id_rol
+FROM usuario u
+CROSS JOIN rol r
+WHERE u.username = 'cliente'
+  AND r.rol = 'CLIENTE';
+
+INSERT INTO usuario_rol (id_usuario, id_rol)
+SELECT u.id_usuario, r.id_rol
+FROM usuario u
+CROSS JOIN rol r
+WHERE u.username = 'admin'
+  AND r.rol = 'ADMIN';
 -- TABLA CATEGORIA
 CREATE TABLE categoria (
 id INT AUTO_INCREMENT PRIMARY KEY,

@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "heyartcraft-web",
+      "runtimeExecutable": "C:\\Users\\Armando\\.m2\\wrapper\\dists\\apache-maven-3.9.16\\56ba1f9f\\bin\\mvn.cmd",
+      "runtimeArgs": ["-f", "C:\\GitHub\\SC-403-HeyArtcraftWeb\\pom.xml", "spring-boot:run"],
+      "port": 8081
+    }
+  ]
+}

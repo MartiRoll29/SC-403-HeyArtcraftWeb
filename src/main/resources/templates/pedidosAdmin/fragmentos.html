@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+
+    <body>
+
+        <!-- HU-26: pedidos pendientes, del más antiguo al más reciente -->
+        <section th:fragment="listaPendientes" class="container my-5">
+            <h3 class="categoria-titulo mb-4">[[#{pedido.admin.pendientes.titulo}]]</h3>
+
+            <div th:if="${#lists.isEmpty(pedidos)}" class="alert alert-custom">
+                [[#{pedido.admin.sinPendientes}]]
+            </div>
+
+            <div th:unless="${#lists.isEmpty(pedidos)}" class="table-responsive">
+                <table class="table table-hover align-middle bg-white shadow-sm">
+                    <thead>
+                        <tr>
+                            <th scope="col">[[#{pedido.numero}]]</th>
+                            <th scope="col">[[#{pedido.admin.cliente}]]</th>
+                            <th scope="col">[[#{pedido.fechaEmision}]]</th>
+                            <th scope="col">[[#{pedido.admin.productos}]]</th>
+                            <th scope="col">[[#{pedido.estado}]]</th>
+                            <th scope="col" class="text-end">[[#{pedido.total}]]</th>
+                            <th scope="col" class="text-end">[[#{pedido.admin.acciones}]]</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="p : ${pedidos}">
+                            <td class="fw-bold" th:text="'#' + ${p.id}"></td>
+
+                            <td th:text="${p.usuario != null ? (p.usuario.nombre + ' ' + p.usuario.apellidos) : '-'}"></td>
+
+                            <td th:text="${#temporals.format(p.fechaCreacion, 'dd-MM-yyyy HH:mm')}"></td>
+
+                            <td>
+                                <span th:each="d, iter : ${p.detalles}">
+                                    <span th:text="${d.nombreProducto}"></span><span th:if="${!iter.last}">, </span>
+                                </span>
+                            </td>
+
+                            <td>
+                                <span class="badge rounded-pill text-bg-warning" th:text="${p.estado}"></span>
+                            </td>
+
+                            <td class="text-end fw-bold"
+                                th:text="${'₡' + #numbers.formatDecimal(p.total, 1, 'COMMA', 0, 'POINT')}"></td>
+
+                            <td class="text-end">
+                                <div class="d-flex gap-2 justify-content-end">
+                                    <!-- HU-27: completar pedido -->
+                                    <form th:action="@{/pedidos/admin/{id}/completar(id=${p.id})}" method="post">
+                                        <button type="submit" class="btn btn-custom btn-sm">
+                                            <i class="fa-solid fa-check"></i> [[#{pedido.admin.completar}]]
+                                        </button>
+                                    </form>
+
+                                    <!-- HU-28: cancelar pedido (con confirmación) -->
+                                    <button type="button" class="btn btn-custom btn-sm"
+                                            data-bs-toggle="modal"
+                                            th:attr="data-bs-target='#confirmCancelarPedido__' + ${p.id}">
+                                        <i class="fa-solid fa-ban"></i> [[#{pedido.admin.cancelar}]]
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <!-- Modales de confirmación para cancelar (HU-28) -->
+                <div th:each="p : ${pedidos}">
+                    <div class="modal fade" th:id="'confirmCancelarPedido__' + ${p.id}" tabindex="-1">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <form th:action="@{/pedidos/admin/{id}/cancelar(id=${p.id})}" method="post">
+                                    <div class="modal-header bg-secondary text-white">
+                                        <h5 class="modal-title">[[#{accion.confirmar}]]</h5>
+                                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>[[#{pedido.admin.confirmarCancelar}]] <strong th:text="'#' + ${p.id}"></strong>?</p>
+                                        <p class="text-muted small mb-0">[[#{accion.confirmar.texto2}]]</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="submit" class="btn btn-custom">
+                                            <i class="fa-solid fa-ban"></i> [[#{pedido.admin.cancelar}]]
+                                        </button>
+                                        <button type="button" class="btn btn-custom" data-bs-dismiss="modal">
+                                            <i class="fa-solid fa-xmark"></i> [[#{accion.cerrar}]]
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-flex gap-2 mt-3">
+                <a th:href="@{/}" class="btn btn-custom">
+                    <i class="fa-solid fa-arrow-left"></i> [[#{accion.regresar}]]
+                </a>
+                <a th:href="@{/pedidos/admin/historial}" class="btn btn-custom">
+                    <i class="fa-solid fa-clock-rotate-left"></i> [[#{pedido.admin.historial.titulo}]]
+                </a>
+            </div>
+        </section>
+
+
+        <!-- HU-29 y HU-30: historial de pedidos procesados, con búsqueda -->
+        <section th:fragment="historialAdmin" class="container my-5">
+            <h3 class="categoria-titulo mb-4">[[#{pedido.admin.historial.titulo}]]</h3>
+
+            <!-- HU-30: barra de búsqueda por cliente o categoría -->
+            <form th:action="@{/pedidos/admin/historial}" method="get" class="row g-2 mb-4">
+                <div class="col-md-8">
+                    <input type="text" name="q" th:value="${q}" class="form-control"
+                           th:placeholder="#{pedido.admin.buscarPlaceholder}"/>
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-custom w-100">
+                        <i class="fa-solid fa-magnifying-glass"></i> [[#{accion.buscar}]]
+                    </button>
+                </div>
+                <div class="col-md-2" th:if="${q != null and !q.isEmpty()}">
+                    <a th:href="@{/pedidos/admin/historial}" class="btn btn-custom w-100">
+                        <i class="fa-solid fa-xmark"></i> [[#{accion.limpiar}]]
+                    </a>
+                </div>
+            </form>
+
+            <div th:if="${#lists.isEmpty(pedidos)}" class="alert alert-custom">
+                [[#{pedido.admin.sinResultados}]]
+            </div>
+
+            <div th:unless="${#lists.isEmpty(pedidos)}" class="table-responsive">
+                <table class="table table-hover align-middle bg-white shadow-sm">
+                    <thead>
+                        <tr>
+                            <th scope="col">[[#{pedido.numero}]]</th>
+                            <th scope="col">[[#{pedido.admin.cliente}]]</th>
+                            <th scope="col">[[#{pedido.admin.productos}]]</th>
+                            <th scope="col">[[#{pedido.admin.categoria}]]</th>
+                            <th scope="col">[[#{pedido.fechaEmision}]]</th>
+                            <th scope="col">[[#{pedido.estado}]]</th>
+                            <th scope="col" class="text-end">[[#{pedido.total}]]</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="p : ${pedidos}">
+                            <td class="fw-bold" th:text="'#' + ${p.id}"></td>
+
+                            <td th:text="${p.usuario != null ? (p.usuario.nombre + ' ' + p.usuario.apellidos) : '-'}"></td>
+
+                            <td>
+                                <span th:each="d, iter : ${p.detalles}">
+                                    <span th:text="${d.nombreProducto}"></span><span th:if="${!iter.last}">, </span>
+                                </span>
+                            </td>
+
+                            <td>
+                                <span th:each="d : ${p.detalles}" th:if="${d.producto != null and d.producto.categoria != null}"
+                                      class="badge rounded-pill text-bg-secondary me-1" th:text="${d.producto.categoria.nombre}"></span>
+                            </td>
+
+                            <td th:text="${#temporals.format(p.fechaCreacion, 'dd-MM-yyyy HH:mm')}"></td>
+
+                            <td>
+                                <span th:if="${p.estado == 'COMPLETADO'}"
+                                      class="badge rounded-pill text-bg-success" th:text="${p.estado}"></span>
+                                <span th:if="${p.estado == 'CANCELADO'}"
+                                      class="badge rounded-pill text-bg-danger" th:text="${p.estado}"></span>
+                            </td>
+
+                            <td class="text-end fw-bold"
+                                th:text="${'₡' + #numbers.formatDecimal(p.total, 1, 'COMMA', 0, 'POINT')}"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <a th:href="@{/pedidos/admin}" class="btn btn-custom mt-3">
+                <i class="fa-solid fa-arrow-left"></i> [[#{accion.regresar}]]
+            </a>
+        </section>
+
+    </body>
+</html>

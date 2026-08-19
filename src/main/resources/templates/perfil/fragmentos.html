@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+
+    <head th:fragment="head">
+        <meta charset="UTF-8"/>
+    </head>
+
+    <body>
+
+        <!-- HU-16: datos de la cuenta y opciones disponibles -->
+        <section th:fragment="datosPerfil" class="container my-5">
+            <h3 class="categoria-titulo mb-4">[[#{perfil.titulo}]]</h3>
+
+            <div class="row g-4">
+                <div class="col-md-7">
+                    <div class="card shadow-sm w-100">
+                        <div class="card-body p-4">
+                            <h5 class="categoria-titulo">[[#{perfil.datos}]]</h5>
+
+                            <div class="d-flex align-items-center my-3">
+                                <img th:if="${usuario.rutaImagen != null}"
+                                     th:src="@{${usuario.rutaImagen}}"
+                                     class="logo-img me-3" alt=""/>
+                                <i th:unless="${usuario.rutaImagen != null}"
+                                   class="fa-solid fa-circle-user me-3"
+                                   style="font-size:3rem; color:#3a2418;"
+                                   aria-hidden="true"></i>
+
+                                <div>
+                                    <p class="fw-bold mb-0"
+                                       th:text="${usuario.nombre + ' ' + usuario.apellidos}"></p>
+                                    <small class="text-muted" sec:authentication="name"></small>
+                                </div>
+                            </div>
+
+                            <dl class="row mb-0">
+                                <dt class="col-sm-5">[[#{usuario.username}]]</dt>
+                                <dd class="col-sm-7" th:text="${usuario.username}"></dd>
+
+                                <dt class="col-sm-5">[[#{usuario.correo}]]</dt>
+                                <dd class="col-sm-7" th:text="${usuario.correo != null ? usuario.correo : '-'}"></dd>
+
+                                <dt class="col-sm-5">[[#{usuario.telefono}]]</dt>
+                                <dd class="col-sm-7" th:text="${usuario.telefono != null ? usuario.telefono : '-'}"></dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-5">
+                    <div class="card shadow-sm w-100">
+                        <div class="card-body p-4">
+                            <h5 class="categoria-titulo">[[#{perfil.opciones}]]</h5>
+
+                            <div class="d-grid gap-2 mt-3">
+                                <a th:href="@{/perfil/password}" class="btn btn-custom">
+                                    <i class="fa-solid fa-key"></i> [[#{perfil.cambiarPassword}]]
+                                </a>
+                                <a th:href="@{/perfil/pedidos}" class="btn btn-custom">
+                                    <i class="fa-solid fa-receipt"></i> [[#{perfil.historial}]]
+                                </a>
+
+                                <!-- HU-20: cerrar sesion -->
+                                <form th:action="@{/logout}" method="post" class="d-grid">
+                                    <button type="submit" class="btn btn-custom">
+                                        <i class="fa-solid fa-right-from-bracket"></i>
+                                        [[#{perfil.cerrarSesion}]]
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- HU-17: formulario de cambio de contrasena -->
+        <section th:fragment="formPassword" class="container my-5">
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <div class="card shadow-sm w-100">
+                        <div class="card-body p-4">
+                            <div class="text-center mb-2 mt-3">
+                                <h3 class="categoria-titulo mb-4">[[#{perfil.password.titulo}]]</h3>
+                            </div>
+                            <form th:action="@{/perfil/password}" method="post">
+                                <label class="form-label" for="passwordActual">
+                                    [[#{perfil.password.actual}]]
+                                </label>
+                                <input type="password" id="passwordActual" name="passwordActual"
+                                       class="form-control" required="required"/>
+
+                                <label class="form-label mt-3" for="passwordNueva">
+                                    [[#{perfil.password.nueva}]]
+                                </label>
+                                <input type="password" id="passwordNueva" name="passwordNueva"
+                                       class="form-control" minlength="6" required="required"/>
+
+                                <label class="form-label mt-3" for="passwordConfirmacion">
+                                    [[#{perfil.password.confirmacion}]]
+                                </label>
+                                <input type="password" id="passwordConfirmacion" name="passwordConfirmacion"
+                                       class="form-control" minlength="6" required="required"/>
+
+                                <div class="d-flex gap-2 mt-4">
+                                    <button type="submit" class="btn btn-custom">
+                                        <i class="fa-solid fa-floppy-disk"></i> [[#{accion.guardar}]]
+                                    </button>
+                                    <a th:href="@{/perfil}" class="btn btn-custom">
+                                        <i class="fa-solid fa-arrow-left"></i> [[#{accion.regresar}]]
+                                    </a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- HU-18: historial de pedidos del cliente -->
+        <section th:fragment="historialPedidos" class="container my-5">
+            <h3 class="categoria-titulo mb-4">[[#{pedido.historial}]]</h3>
+
+            <div th:if="${#lists.isEmpty(pedidos)}" class="alert alert-custom">
+                [[#{pedido.sinPedidos}]]
+            </div>
+
+            <div th:unless="${#lists.isEmpty(pedidos)}" class="table-responsive">
+                <table class="table table-hover align-middle bg-white shadow-sm">
+                    <thead>
+                        <tr>
+                            <th scope="col">[[#{pedido.numero}]]</th>
+                            <th scope="col">[[#{pedido.fechaEmision}]]</th>
+                            <th scope="col">[[#{pedido.fechaEntrega}]]</th>
+                            <th scope="col">[[#{pedido.estado}]]</th>
+                            <th scope="col" class="text-end">[[#{pedido.total}]]</th>
+                            <th scope="col" class="text-end">[[#{factura.titulo}]]</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="p : ${pedidos}">
+                            <td class="fw-bold" th:text="'#' + ${p.id}"></td>
+
+                            <td th:text="${#temporals.format(p.fechaCreacion, 'dd-MM-yyyy HH:mm')}"></td>
+
+                            <td>
+                                <span th:if="${p.fechaEntrega != null}"
+                                      th:text="${#temporals.format(p.fechaEntrega, 'dd-MM-yyyy HH:mm')}"></span>
+                                <span th:unless="${p.fechaEntrega != null}"
+                                      class="badge rounded-pill text-bg-secondary">
+                                    [[#{pedido.sinEntrega}]]
+                                </span>
+                            </td>
+
+                            <td>
+                                <span class="badge rounded-pill text-bg-success" th:text="${p.estado}"></span>
+                            </td>
+
+                            <td class="text-end fw-bold"
+                                th:text="${'₡' + #numbers.formatDecimal(p.total, 1, 'COMMA', 0, 'POINT')}"></td>
+
+                            <!-- HU-19: descarga del comprobante -->
+                            <td class="text-end">
+                                <a th:href="@{/perfil/pedidos/{id}/factura(id=${p.id})}"
+                                   class="btn btn-custom btn-sm">
+                                    <i class="fa-solid fa-file-pdf"></i> [[#{pedido.descargarFactura}]]
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <a th:href="@{/perfil}" class="btn btn-custom mt-3">
+                <i class="fa-solid fa-arrow-left"></i> [[#{accion.regresar}]]
+            </a>
+        </section>
+
+    </body>
+</html>
