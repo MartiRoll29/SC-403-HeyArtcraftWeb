@@ -1,38 +1,45 @@
 package HeyArtcraftWeb.Service;
 
-import HeyArtcraftWeb.Domain.Usuario;
 import HeyArtcraftWeb.Domain.Rol;
-import HeyArtcraftWeb.Repository.UsuarioRepository;
+import HeyArtcraftWeb.Domain.Usuario;
 import HeyArtcraftWeb.Repository.RolRepository;
-import HeyArtcraftWeb.Service.CorreoService;
-import java.util.List;
+import HeyArtcraftWeb.Repository.UsuarioRepository;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
-import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest;
+import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserService;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
-import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
-import org.springframework.security.oauth2.core.user.OAuth2User;
+import org.springframework.security.oauth2.core.OAuth2Error;
+import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
+import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
-import java.util.stream.Collectors;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-
 @Service
-public class CustomOAuth2UserService extends DefaultOAuth2UserService {
+public class CustomOAuth2UserService extends OidcUserService {
 
-    private static final Logger log = LoggerFactory.getLogger(CustomOAuth2UserService.class);
+    private static final Logger log
+            = LoggerFactory.getLogger(CustomOAuth2UserService.class);
+
+    private static final PasswordEncoder PASSWORD_ENCODER
+            = new BCryptPasswordEncoder();
 
     private final UsuarioRepository usuarioRepository;
     private final RolRepository rolRepository;
     private final CorreoService correoService;
 
-    public CustomOAuth2UserService(UsuarioRepository usuarioRepository,
+    public CustomOAuth2UserService(
+            UsuarioRepository usuarioRepository,
             RolRepository rolRepository,
             CorreoService correoService) {
+
         this.usuarioRepository = usuarioRepository;
         this.rolRepository = rolRepository;
         this.correoService = correoService;
@@ -40,47 +47,89 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     @Override
     @Transactional
-    public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
-        OAuth2User oAuth2User = super.loadUser(userRequest);
+    public OidcUser loadUser(OidcUserRequest userRequest)
+            throws OAuth2AuthenticationException {
 
-        log.info("Google attributes: {}", oAuth2User.getAttributes());
+        OidcUser oidcUser = super.loadUser(userRequest);
 
-        String email = oAuth2User.getAttribute("email");
-        String nombre = oAuth2User.getAttribute("given_name");
-        String apellidos = oAuth2User.getAttribute("family_name");
-        String foto = oAuth2User.getAttribute("picture");
+        String email = oidcUser.getEmail();
 
-        // Buscar usuario en BD
-        Usuario usuario = usuarioRepository.findByCorreo(email).orElse(null);
-
-        if (usuario == null) {
-            usuario = new Usuario();
-            usuario.setCorreo(email);
-            usuario.setUsername(email);       // siempre válido y único
-            usuario.setNombre(nombre);        // puede ser null si quitaste @NotBlank
-            usuario.setApellidos(apellidos);  // puede ser null si quitaste @NotBlank
-            usuario.setPassword("oauth");     // dummy
-            usuario.setRutaImagen(foto);
-
-            Rol rolCliente = rolRepository.findByRol("CLIENTE")
-                    .orElseThrow(() -> new IllegalStateException("Rol CLIENTE no existe en BD"));
-            usuario.getRoles().add(rolCliente);
-
-            usuario = usuarioRepository.save(usuario);
-            log.info("Usuario Google guardado en BD con id {}", usuario.getIdUsuario());
-
-            correoService.enviarBienvenida(email, nombre != null ? nombre : email);
+        if (email == null || email.isBlank()) {
+            throw new OAuth2AuthenticationException(
+                    new OAuth2Error("email_no_disponible"),
+                    "Google no proporcionó el correo del usuario"
+            );
         }
 
-        // Construir authorities desde los roles en BD
-        List<GrantedAuthority> authorities = usuario.getRoles().stream()
-                .map(rol -> new SimpleGrantedAuthority("ROLE_" + rol.getRol()))
-                .collect(Collectors.toList());
+        log.info("Inicio de sesión con Google: {}", email);
 
-        // Retornar usuario con roles correctos
-        return new DefaultOAuth2User(
+        Usuario usuario = usuarioRepository.findByCorreo(email).orElse(null);
+
+        Rol rolCliente = rolRepository.findByRol("CLIENTE")
+                .orElseThrow(() ->
+                new IllegalStateException("El rol CLIENTE no existe en la base de datos"));
+
+        boolean usuarioNuevo = usuario == null;
+
+        if (usuarioNuevo) {
+            usuario = new Usuario();
+
+            String username = "google_" + oidcUser.getSubject();
+
+            if (username.length() > 30) {
+                username = username.substring(0, 30);
+            }
+
+            usuario.setUsername(username);
+            usuario.setCorreo(email);
+            usuario.setNombre(oidcUser.getGivenName());
+            usuario.setApellidos(oidcUser.getFamilyName());
+            usuario.setRutaImagen(oidcUser.getPicture());
+            usuario.setActivo(true);
+
+            // Contraseña aleatoria cifrada: Google no utiliza contraseña local.
+            usuario.setPassword(
+                    PASSWORD_ENCODER.encode(UUID.randomUUID().toString())
+            );
+        }
+
+        // También corrige usuarios existentes que todavía no tengan rol.
+        boolean rolAgregado = usuario.getRoles().add(rolCliente);
+
+        if (usuarioNuevo || rolAgregado) {
+            usuario = usuarioRepository.saveAndFlush(usuario);
+        }
+
+        if (usuarioNuevo) {
+            try {
+                correoService.enviarBienvenida(
+                        email,
+                        usuario.getNombre() != null
+                                ? usuario.getNombre()
+                                : email
+                );
+            } catch (RuntimeException ex) {
+                // Un fallo de correo no debe eliminar al usuario creado.
+                log.warn(
+                        "No se pudo enviar el correo de bienvenida a {}",
+                        email
+                );
+            }
+        }
+
+        Set<GrantedAuthority> authorities
+                = new HashSet<>(oidcUser.getAuthorities());
+
+        usuario.getRoles().forEach(rol ->
+            authorities.add(
+                    new SimpleGrantedAuthority("ROLE_" + rol.getRol())
+            )
+        );
+
+        return new DefaultOidcUser(
                 authorities,
-                oAuth2User.getAttributes(),
+                oidcUser.getIdToken(),
+                oidcUser.getUserInfo(),
                 "email"
         );
     }

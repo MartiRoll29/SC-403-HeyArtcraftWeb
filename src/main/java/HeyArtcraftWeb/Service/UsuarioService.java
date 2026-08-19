@@ -18,51 +18,87 @@ public class UsuarioService {
     private final UsuarioRepository usuarioRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public UsuarioService(UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder) {
+    public UsuarioService(
+            UsuarioRepository usuarioRepository,
+            PasswordEncoder passwordEncoder) {
+
         this.usuarioRepository = usuarioRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
-    // HU-16: datos de la cuenta del cliente conectado
-    @Transactional(readOnly = true)
-    public Optional<Usuario> getUsuarioPorUsername(String username) {
-        return usuarioRepository.findByUsername(username);
+    /**
+     * Busca un usuario por username o por correo electrónico.
+     */
+    private Optional<Usuario> buscarPorIdentificador(String identificador) {
+        return usuarioRepository.findByUsername(identificador)
+                .or(() -> usuarioRepository.findByCorreo(identificador));
     }
 
     /**
-     * Usuario conectado en la sesión actual. Lo usan el perfil (HU-16 a HU-19)
-     * y la confirmación de compra (HU-15), para que todo pedido quede con dueño.
+     * Obtiene un usuario por su username o correo.
+     */
+    @Transactional(readOnly = true)
+    public Optional<Usuario> getUsuarioPorUsername(String username) {
+        return buscarPorIdentificador(username);
+    }
+
+    /**
+     * Obtiene al usuario conectado, tanto si ingresó localmente como con Google.
      */
     @Transactional(readOnly = true)
     public Usuario getUsuarioAutenticado() {
-        Authentication autenticacion = SecurityContextHolder.getContext().getAuthentication();
-        if (autenticacion == null || !autenticacion.isAuthenticated()) {
-            throw new IllegalStateException("No hay un usuario autenticado en la sesión");
+
+        Authentication autenticacion
+                = SecurityContextHolder.getContext().getAuthentication();
+
+        if (autenticacion == null
+                || !autenticacion.isAuthenticated()
+                || "anonymousUser".equals(autenticacion.getName())) {
+
+            throw new IllegalStateException(
+                    "No hay un usuario autenticado en la sesión"
+            );
         }
-        return usuarioRepository.findByUsername(autenticacion.getName())
+
+        String identificador = autenticacion.getName();
+
+        return buscarPorIdentificador(identificador)
                 .orElseThrow(() -> new IllegalStateException(
-                        "Usuario autenticado no encontrado en BD: " + autenticacion.getName()));
+                "Usuario autenticado no encontrado en la base de datos: "
+                + identificador
+        ));
     }
 
     /**
-     * HU-17: cambia la contraseña del usuario validando que la actual sea
-     * correcta, que la nueva coincida con su confirmación y que tenga la
-     * longitud mínima. Los mensajes de error son CLAVES de messages.properties
-     * para que el controlador las traduzca.
+     * Cambia la contraseña de un usuario local.
      */
     @Transactional
-    public void cambiarPassword(String username, String actual, String nueva, String confirmacion) {
-        Usuario usuario = usuarioRepository.findByUsername(username)
-                .orElseThrow(() -> new IllegalArgumentException("usuario.error01"));
+    public void cambiarPassword(
+            String identificador,
+            String actual,
+            String nueva,
+            String confirmacion) {
+
+        Usuario usuario = buscarPorIdentificador(identificador)
+                .orElseThrow(() ->
+                new IllegalArgumentException("usuario.error01"));
 
         if (!passwordEncoder.matches(actual, usuario.getPassword())) {
-            throw new IllegalArgumentException("perfil.error.passwordActual");
+            throw new IllegalArgumentException(
+                    "perfil.error.passwordActual"
+            );
         }
+
         if (nueva == null || !nueva.equals(confirmacion)) {
-            throw new IllegalArgumentException("perfil.error.passwordNoCoincide");
+            throw new IllegalArgumentException(
+                    "perfil.error.passwordNoCoincide"
+            );
         }
+
         if (nueva.length() < 6) {
-            throw new IllegalArgumentException("perfil.error.passwordCorta");
+            throw new IllegalArgumentException(
+                    "perfil.error.passwordCorta"
+            );
         }
 
         // La contraseña se guarda SIEMPRE cifrada.
