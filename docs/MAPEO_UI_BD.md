@@ -41,6 +41,7 @@ Estados:
 | `GET /login`, `POST /login` | `ProjectConfig`, Spring Security | `login` | `sp_usuario_obtener_correo`, `sp_usuario_rol_listar_usuario` | Listo para migrar |
 | `GET/POST /registro` | `RegistroController` | `registro` | `fn_usuario_existe_correo`, `sp_usuario_insertar`, `sp_rol_listar`, `sp_usuario_rol_insertar` | Listo para migrar |
 | `GET /perfil` | `PerfilController` | `perfil/perfil` | `sp_usuario_obtener` | Listo para migrar |
+| `GET/POST /perfil/editar` (nueva) | `PerfilController` | `perfil/editar` | `sp_usuario_obtener`, `fn_usuario_existe_correo`, `sp_usuario_actualizar` | Migrada en la Fase 2 |
 | `GET/POST /perfil/password` | `PerfilController` | `perfil/password` | `sp_usuario_obtener_correo` (hash actual), `sp_usuario_cambiar_contrasena` | Listo para migrar |
 | `GET /acceso_denegado` | `ProjectConfig` | `acceso_denegado` | Ninguno | Sin cambios |
 | `GET /` | `HomeController` | `index` | Productos: módulo Catálogo | Hero visible, destacados pendientes de módulo |
@@ -63,7 +64,6 @@ Rutas propuestas. Hay que agregarlas a `SecurityConfig` y al menú de `general/f
 
 | Ruta | Acceso | Controlador | Procedimientos |
 |---|---|---|---|
-| `GET /perfil/editar`, `POST /perfil/editar` | Autenticado | `PerfilController` | `sp_usuario_obtener`, `fn_usuario_existe_correo`, `sp_usuario_actualizar` |
 | `GET /perfil/direcciones` | Autenticado | `DireccionController` (nuevo) | `sp_direccion_listar_usuario` |
 | `GET/POST /perfil/direcciones/nueva` | Autenticado | `DireccionController` | `sp_direccion_insertar` |
 | `GET/POST /perfil/direcciones/{id}/editar` | Autenticado, dueño | `DireccionController` | `sp_direccion_obtener`, `sp_direccion_actualizar` |

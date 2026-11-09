@@ -5,13 +5,20 @@ import HeyArtcraftWeb.Domain.Usuario;
 import HeyArtcraftWeb.Service.FacturaPdfService;
 import HeyArtcraftWeb.Service.PedidoService;
 import HeyArtcraftWeb.Service.UsuarioService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -46,6 +53,45 @@ public class PerfilController {
     public String perfil(Model model) {
         model.addAttribute("usuario", usuarioService.getUsuarioAutenticado());
         return "perfil/perfil";
+    }
+
+    // Formulario para editar nombre y correo
+    @GetMapping("/editar")
+    public String formEditar(Model model) {
+        model.addAttribute("usuario", usuarioService.getUsuarioAutenticado());
+        return "perfil/editar";
+    }
+
+    // Procesa la edición. Solo se usan el nombre y el correo del formulario.
+    @PostMapping("/editar")
+    public String editar(@Valid @ModelAttribute("usuario") Usuario datos,
+            BindingResult resultado,
+            RedirectAttributes redirectAttributes,
+            HttpServletRequest request,
+            HttpServletResponse response,
+            Authentication autenticacion) {
+
+        if (resultado.hasErrors()) {
+            return "perfil/editar";
+        }
+
+        boolean cambioCorreo;
+        try {
+            cambioCorreo = usuarioService.actualizarDatos(
+                    usuarioService.getUsuarioAutenticado(), datos.getNombre(), datos.getCorreo());
+        } catch (IllegalArgumentException e) {
+            resultado.reject(e.getMessage());
+            return "perfil/editar";
+        }
+
+        // El correo es el nombre de usuario de la sesión: hay que volver a entrar.
+        if (cambioCorreo) {
+            new SecurityContextLogoutHandler().logout(request, response, autenticacion);
+            return "redirect:/login?correoActualizado";
+        }
+
+        redirectAttributes.addFlashAttribute("todoOk", traducir("perfil.editar.ok"));
+        return "redirect:/perfil";
     }
 
     // HU-17: formulario de cambio de contraseña

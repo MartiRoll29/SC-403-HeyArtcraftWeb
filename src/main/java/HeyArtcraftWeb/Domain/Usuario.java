@@ -2,6 +2,7 @@ package HeyArtcraftWeb.Domain;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,14 +21,20 @@ public class Usuario {
     private Integer idUsuario;
 
     @NotBlank
+    @Size(max = 100)
     private String nombre;
 
     @NotBlank
     @Email
+    @Size(max = 150)
     private String correo;
 
-    /** Hash BCrypt (columna contrasena). Nunca la contraseña en texto plano. */
+    /**
+     * En el registro llega en texto plano desde el formulario; lo que viene
+     * de la BD es siempre el hash BCrypt (columna contrasena).
+     */
     @ToString.Exclude
+    @Size(min = 6)
     private String password;
 
     private LocalDateTime fechaRegistro;

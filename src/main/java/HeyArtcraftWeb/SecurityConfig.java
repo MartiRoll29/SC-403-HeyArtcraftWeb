@@ -106,6 +106,7 @@ public class SecurityConfig {
                 .formLogin(form -> form
                 .loginPage("/login")
                 .loginProcessingUrl("/login")
+                .usernameParameter("correo")
                 .defaultSuccessUrl("/", true)
                 .failureUrl("/login?error=true")
                 .permitAll()

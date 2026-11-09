@@ -20,30 +20,20 @@
                             <h5 class="categoria-titulo">[[#{perfil.datos}]]</h5>
 
                             <div class="d-flex align-items-center my-3">
-                                <img th:if="${usuario.rutaImagen != null}"
-                                     th:src="@{${usuario.rutaImagen}}"
-                                     class="logo-img me-3" alt=""/>
-                                <i th:unless="${usuario.rutaImagen != null}"
-                                   class="fa-solid fa-circle-user me-3"
+                                <i class="fa-solid fa-circle-user me-3"
                                    style="font-size:3rem; color:#3a2418;"
                                    aria-hidden="true"></i>
 
-                                <div>
-                                    <p class="fw-bold mb-0"
-                                       th:text="${usuario.nombre + ' ' + usuario.apellidos}"></p>
-                                    <small class="text-muted" sec:authentication="name"></small>
-                                </div>
+                                <p class="fw-bold mb-0" th:text="${usuario.nombre}"></p>
                             </div>
 
                             <dl class="row mb-0">
-                                <dt class="col-sm-5">[[#{usuario.username}]]</dt>
-                                <dd class="col-sm-7" th:text="${usuario.username}"></dd>
-
                                 <dt class="col-sm-5">[[#{usuario.correo}]]</dt>
-                                <dd class="col-sm-7" th:text="${usuario.correo != null ? usuario.correo : '-'}"></dd>
+                                <dd class="col-sm-7" th:text="${usuario.correo}"></dd>
 
-                                <dt class="col-sm-5">[[#{usuario.telefono}]]</dt>
-                                <dd class="col-sm-7" th:text="${usuario.telefono != null ? usuario.telefono : '-'}"></dd>
+                                <dt class="col-sm-5">[[#{usuario.fechaRegistro}]]</dt>
+                                <dd class="col-sm-7"
+                                    th:text="${usuario.fechaRegistro != null ? #temporals.format(usuario.fechaRegistro, 'dd/MM/yyyy') : '-'}"></dd>
                             </dl>
                         </div>
                     </div>
@@ -55,6 +45,9 @@
                             <h5 class="categoria-titulo">[[#{perfil.opciones}]]</h5>
 
                             <div class="d-grid gap-2 mt-3">
+                                <a th:href="@{/perfil/editar}" class="btn btn-custom">
+                                    <i class="fa-solid fa-pen"></i> [[#{perfil.editar}]]
+                                </a>
                                 <a th:href="@{/perfil/password}" class="btn btn-custom">
                                     <i class="fa-solid fa-key"></i> [[#{perfil.cambiarPassword}]]
                                 </a>
