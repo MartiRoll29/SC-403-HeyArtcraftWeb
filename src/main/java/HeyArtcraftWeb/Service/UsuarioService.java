@@ -63,6 +63,16 @@ public class UsuarioService {
                 "Usuario autenticado no encontrado en la base de datos"));
     }
 
+    /** Id del usuario conectado, sin consultar la BD cuando la sesión ya lo tiene. */
+    public Integer getIdUsuarioAutenticado() {
+        Authentication autenticacion
+                = SecurityContextHolder.getContext().getAuthentication();
+
+        return autenticacion != null && autenticacion.getPrincipal() instanceof UsuarioDetails detalles
+                ? detalles.getIdUsuario()
+                : getUsuarioAutenticado().getIdUsuario();
+    }
+
     /**
      * Actualiza nombre y correo.
      *

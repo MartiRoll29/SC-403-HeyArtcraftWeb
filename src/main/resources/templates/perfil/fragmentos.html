@@ -54,6 +54,12 @@
                                 <a th:href="@{/perfil/pedidos}" class="btn btn-custom">
                                     <i class="fa-solid fa-receipt"></i> [[#{perfil.historial}]]
                                 </a>
+                                <a th:href="@{/perfil/direcciones}" class="btn btn-custom">
+                                    <i class="fa-solid fa-location-dot"></i> [[#{perfil.direcciones}]]
+                                </a>
+                                <a th:href="@{/perfil/facturas}" class="btn btn-custom">
+                                    <i class="fa-solid fa-file-invoice"></i> [[#{perfil.facturas}]]
+                                </a>
 
                                 <!-- HU-20: cerrar sesion -->
                                 <form th:action="@{/logout}" method="post" class="d-grid">

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+    <head th:replace="~{general/fragmentos:: head}"/>
+    <body>
+        <header th:replace="~{general/fragmentos:: header}"/>
+
+        <section class="container my-5">
+            <h3 class="categoria-titulo mb-4">[[#{admin.usuarios}]]</h3>
+
+            <div class="table-responsive">
+                <table class="table table-hover align-middle bg-white shadow-sm">
+                    <thead>
+                        <tr>
+                            <th scope="col">[[#{admin.id}]]</th>
+                            <th scope="col">[[#{registro.nombre}]]</th>
+                            <th scope="col">[[#{usuario.correo}]]</th>
+                            <th scope="col">[[#{usuario.fechaRegistro}]]</th>
+                            <th scope="col">[[#{admin.roles}]]</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="u : ${usuarios}">
+                            <td class="fw-bold" th:text="${u.idUsuario}"></td>
+                            <td th:text="${u.nombre}"></td>
+                            <td th:text="${u.correo}"></td>
+                            <td th:text="${#temporals.format(u.fechaRegistro, 'dd-MM-yyyy')}"></td>
+                            <td>
+                                <span th:each="r : ${u.roles}"
+                                      class="badge rounded-pill text-bg-success me-1"
+                                      th:text="${r.nombreRol}"></span>
+                                <span th:if="${#lists.isEmpty(u.roles)}"
+                                      class="badge rounded-pill text-bg-secondary">[[#{admin.sinRol}]]</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <footer th:replace="~{general/fragmentos:: footer}"/>
+    </body>
+</html>

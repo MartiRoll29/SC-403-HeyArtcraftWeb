@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+    <head th:replace="~{general/fragmentos:: head}"/>
+    <body>
+        <header th:replace="~{general/fragmentos:: header}"/>
+
+        <section class="container my-5">
+            <h3 class="categoria-titulo mb-4">[[#{admin.mensajes}]]</h3>
+
+            <div th:if="${#lists.isEmpty(mensajes)}" class="alert alert-custom">
+                [[#{admin.sinMensajes}]]
+            </div>
+
+            <div th:unless="${#lists.isEmpty(mensajes)}" class="table-responsive">
+                <table class="table table-hover align-middle bg-white shadow-sm">
+                    <thead>
+                        <tr>
+                            <th scope="col">[[#{facturas.fecha}]]</th>
+                            <th scope="col">[[#{contacto.nombre}]]</th>
+                            <th scope="col">[[#{contacto.correo}]]</th>
+                            <th scope="col">[[#{contacto.asunto}]]</th>
+                            <th scope="col">[[#{contacto.mensaje}]]</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="m : ${mensajes}">
+                            <td class="text-nowrap" th:text="${#temporals.format(m.fechaEnvio, 'dd-MM-yyyy HH:mm')}"></td>
+                            <td th:text="${m.nombreRemitente}"></td>
+                            <td th:text="${m.correoRemitente}"></td>
+                            <td th:text="${m.asunto}"></td>
+                            <td th:text="${m.mensaje}"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <footer th:replace="~{general/fragmentos:: footer}"/>
+    </body>
+</html>

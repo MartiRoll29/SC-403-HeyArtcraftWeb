@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+    <head th:replace="~{general/fragmentos:: head}"/>
+    <body>
+        <header th:replace="~{general/fragmentos:: header}"/>
+
+        <section class="container my-5">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h3 class="categoria-titulo mb-0">[[#{perfil.direcciones}]]</h3>
+                <a th:href="@{/perfil/direcciones/nueva}" class="btn btn-custom">
+                    <i class="fa-solid fa-plus"></i> [[#{direccion.nueva}]]
+                </a>
+            </div>
+
+            <div th:if="${#lists.isEmpty(direcciones)}" class="alert alert-custom">
+                [[#{direccion.vacio}]]
+            </div>
+
+            <div th:unless="${#lists.isEmpty(direcciones)}" class="table-responsive">
+                <table class="table table-hover align-middle bg-white shadow-sm">
+                    <thead>
+                        <tr>
+                            <th scope="col">[[#{direccion.provincia}]]</th>
+                            <th scope="col">[[#{direccion.canton}]]</th>
+                            <th scope="col">[[#{direccion.distrito}]]</th>
+                            <th scope="col">[[#{direccion.senas}]]</th>
+                            <th scope="col">[[#{direccion.codigoPostal}]]</th>
+                            <th scope="col" class="text-end"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="d : ${direcciones}">
+                            <td th:text="${d.provincia}"></td>
+                            <td th:text="${d.canton}"></td>
+                            <td th:text="${d.distrito}"></td>
+                            <td th:text="${d.senasExactas}"></td>
+                            <td th:text="${d.codigoPostal != null ? d.codigoPostal : '-'}"></td>
+                            <td class="text-end">
+                                <div class="d-flex gap-2 justify-content-end">
+                                    <a th:href="@{/perfil/direcciones/{id}/editar(id=${d.idDireccion})}"
+                                       class="btn btn-custom btn-sm">
+                                        <i class="fa-solid fa-pen"></i> [[#{accion.editar}]]
+                                    </a>
+                                    <form th:action="@{/perfil/direcciones/{id}/eliminar(id=${d.idDireccion})}"
+                                          method="post"
+                                          onsubmit="return confirm('¿Eliminar esta dirección?');">
+                                        <button type="submit" class="btn btn-custom btn-sm">
+                                            <i class="fa-solid fa-trash"></i> [[#{accion.eliminar}]]
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <a th:href="@{/perfil}" class="btn btn-custom mt-3">
+                <i class="fa-solid fa-arrow-left"></i> [[#{accion.regresar}]]
+            </a>
+        </section>
+
+        <section th:replace="~{general/fragmentos:: mostrarToast}"/>
+
+        <footer th:replace="~{general/fragmentos:: footer}"/>
+    </body>
+</html>

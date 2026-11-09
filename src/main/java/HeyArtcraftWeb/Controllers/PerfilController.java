@@ -3,6 +3,7 @@ package HeyArtcraftWeb.Controllers;
 import HeyArtcraftWeb.Domain.Pedido;
 import HeyArtcraftWeb.Domain.Usuario;
 import HeyArtcraftWeb.Service.FacturaPdfService;
+import HeyArtcraftWeb.Service.FacturaService;
 import HeyArtcraftWeb.Service.PedidoService;
 import HeyArtcraftWeb.Service.UsuarioService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -38,10 +39,13 @@ public class PerfilController {
     private final UsuarioService usuarioService;
     private final PedidoService pedidoService;
     private final FacturaPdfService facturaPdfService;
+    private final FacturaService facturaService;
     private final MessageSource messageSource;
 
     public PerfilController(UsuarioService usuarioService, PedidoService pedidoService,
-            FacturaPdfService facturaPdfService, MessageSource messageSource) {
+            FacturaPdfService facturaPdfService, FacturaService facturaService,
+            MessageSource messageSource) {
+        this.facturaService = facturaService;
         this.usuarioService = usuarioService;
         this.pedidoService = pedidoService;
         this.facturaPdfService = facturaPdfService;
@@ -120,6 +124,14 @@ public class PerfilController {
             redirectAttributes.addFlashAttribute("error", traducir(e.getMessage()));
             return "redirect:/perfil/password";
         }
+    }
+
+    // "Mis facturas"
+    @GetMapping("/facturas")
+    public String facturas(Model model) {
+        model.addAttribute("facturas",
+                facturaService.listarDelUsuario(usuarioService.getIdUsuarioAutenticado()));
+        return "perfil/facturas";
     }
 
     // HU-18: historial de pedidos del cliente

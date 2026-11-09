@@ -33,6 +33,7 @@ public class SecurityConfig {
         "/oauth2/**",
         "/login/oauth2/**",
         "/registro",
+        "/contacto",
         "/acceso_denegado",
         "/error",
         "/favicon.ico"
@@ -65,7 +66,7 @@ public class SecurityConfig {
         "/categoria/guardar",
         "/categoria/eliminar",
         "/categoria/modificar/**",
-        "/usuario/**",
+        "/admin/**",
         // Módulo 10 y 11: gestión e historial de pedidos (HU-26 a HU-30)
         "/pedidos/admin/**"
     };
