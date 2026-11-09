@@ -49,6 +49,9 @@
                     <div class="card-body">
                         <h5 class="card-title categoria-titulo">Resumen de compra</h5>
 
+                        <div th:unless="${compraActivo}" class="alert alert-info"
+                             th:text="#{modulo.pendiente.texto('Compra')}"></div>
+
                         <form th:action="@{/carrito/confirmar}" method="post" id="formConfirmar">
                             <div class="d-flex justify-content-between">
                                 <span>Subtotal</span>

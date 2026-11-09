@@ -62,7 +62,10 @@
                         <h2 class="destacados-titulo">[[#{destacados.titulo}]]</h2>
                     </div>
 
-                    <div th:if="${#lists.isEmpty(productosDestacados)}" class="alert alert-warning text-center">
+                    <div th:unless="${catalogoActivo}" class="alert alert-info text-center"
+                         th:text="#{modulo.pendiente.texto('Catálogo')}"></div>
+
+                    <div th:if="${catalogoActivo and #lists.isEmpty(productosDestacados)}" class="alert alert-warning text-center">
                         [[#{destacados.vacio}]]
                     </div>
 

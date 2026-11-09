@@ -9,7 +9,6 @@ import HeyArtcraftWeb.Repository.PedidoRepository;
 import HeyArtcraftWeb.Repository.ProductoRepository;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -32,7 +31,6 @@ public class PedidoService {
         this.productoRepository = productoRepository;
     }
 
-    @Transactional
     public Pedido confirmarCompra(CarritoSesion carrito, boolean incluyeEnvio, Usuario usuario) {
         BigDecimal subtotal = carrito.calcularSubtotal();
         BigDecimal costoEnvio = incluyeEnvio ? COSTO_ENVIO : BigDecimal.ZERO;
@@ -62,7 +60,6 @@ public class PedidoService {
     }
 
     // HU-18: pedidos del cliente conectado
-    @Transactional(readOnly = true)
     public List<Pedido> getPedidosDeUsuario(Usuario usuario) {
         return pedidoRepository.findByUsuarioOrderByFechaCreacionDesc(usuario);
     }
@@ -72,7 +69,6 @@ public class PedidoService {
      * para que nadie pueda ver ni descargar la factura de otro cliente solo
      * cambiando el número en la URL.
      */
-    @Transactional(readOnly = true)
     public Pedido getPedidoDeUsuario(Integer idPedido, Usuario usuario) {
         Pedido pedido = pedidoRepository.findByIdConDetalle(idPedido)
                 .orElseThrow(() -> new NoSuchElementException("Pedido no encontrado: " + idPedido));
@@ -85,7 +81,6 @@ public class PedidoService {
     }
 
     // HU-26: pedidos aún no atendidos, del más antiguo al más reciente
-    @Transactional(readOnly = true)
     public List<Pedido> getPedidosPendientes() {
         return pedidoRepository.findByEstadoOrderByFechaCreacionAsc(Pedido.ESTADO_PENDIENTE);
     }
@@ -96,7 +91,6 @@ public class PedidoService {
      * mostraba en el perfil del cliente como "Pendiente" mientras no tuviera
      * valor).
      */
-    @Transactional
     public Pedido completarPedido(Integer idPedido) {
         Pedido pedido = obtenerPedido(idPedido);
         pedido.setEstado(Pedido.ESTADO_COMPLETADO);
@@ -105,7 +99,6 @@ public class PedidoService {
     }
 
     // HU-28: cancela un pedido que no podrá ser procesado
-    @Transactional
     public Pedido cancelarPedido(Integer idPedido) {
         Pedido pedido = obtenerPedido(idPedido);
         pedido.setEstado(Pedido.ESTADO_CANCELADO);
@@ -113,13 +106,11 @@ public class PedidoService {
     }
 
     // HU-29: historial de pedidos procesados (completados y cancelados), ascendente
-    @Transactional(readOnly = true)
     public List<Pedido> getHistorialPedidos() {
         return pedidoRepository.findByEstadoInOrderByFechaCreacionAsc(ESTADOS_HISTORIAL);
     }
 
     // HU-30: busca dentro del historial por cliente o categoría; sin texto, devuelve todo el historial
-    @Transactional(readOnly = true)
     public List<Pedido> buscarEnHistorial(String texto) {
         if (texto == null || texto.isBlank()) {
             return getHistorialPedidos();

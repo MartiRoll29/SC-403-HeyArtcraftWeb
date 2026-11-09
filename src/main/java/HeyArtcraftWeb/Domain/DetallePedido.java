@@ -1,49 +1,29 @@
 package HeyArtcraftWeb.Domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 import java.math.BigDecimal;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
-@Entity
-@Table(name = "detalle_pedido")
+/**
+ * Línea de un pedido. Sus campos se ajustarán a la BD en la Fase 4
+ * (cantidad, id_tamano e id_material).
+ */
 @Data
 @NoArgsConstructor
 public class DetallePedido {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "pedido_id", nullable = false)
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private Pedido pedido;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "producto_id")
     private Producto producto;
-
-    @Column(name = "nombre_producto", nullable = false, length = 120)
     private String nombreProducto;
-
-    @Column(name = "texto_personalizado", length = 255)
     private String textoPersonalizado;
-
-    @Column(name = "tamano_seleccionado", length = 60)
     private String tamanoSeleccionado;
-
-    @Column(length = 500)
     private String especificaciones;
-
-    @Column(name = "precio_unitario", nullable = false, precision = 10, scale = 2)
     private BigDecimal precioUnitario;
 }

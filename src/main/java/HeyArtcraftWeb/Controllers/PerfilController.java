@@ -63,7 +63,7 @@ public class PerfilController {
 
         Usuario usuario = usuarioService.getUsuarioAutenticado();
         try {
-            usuarioService.cambiarPassword(usuario.getUsername(),
+            usuarioService.cambiarPassword(usuario.getCorreo(),
                     passwordActual, passwordNueva, passwordConfirmacion);
 
             redirectAttributes.addFlashAttribute("todoOk", traducir("perfil.password.ok"));

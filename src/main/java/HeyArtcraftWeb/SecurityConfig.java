@@ -1,6 +1,8 @@
 package HeyArtcraftWeb;
 
 import HeyArtcraftWeb.Service.CustomOAuth2UserService;
+import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -68,12 +70,16 @@ public class SecurityConfig {
         "/pedidos/admin/**"
     };
 
-    private final CustomOAuth2UserService customOAuth2UserService;
+    // Solo existe cuando app.oauth.google.enabled=true
+    private final ObjectProvider<CustomOAuth2UserService> customOAuth2UserService;
+    private final boolean googleActivo;
 
     public SecurityConfig(
-            CustomOAuth2UserService customOAuth2UserService) {
+            ObjectProvider<CustomOAuth2UserService> customOAuth2UserService,
+            @Value("${app.oauth.google.enabled:false}") boolean googleActivo) {
 
         this.customOAuth2UserService = customOAuth2UserService;
+        this.googleActivo = googleActivo;
     }
 
     /**
@@ -104,13 +110,6 @@ public class SecurityConfig {
                 .failureUrl("/login?error=true")
                 .permitAll()
                 )
-                .oauth2Login(oauth2 -> oauth2
-                .loginPage("/login")
-                .userInfoEndpoint(userInfo -> userInfo
-                .oidcUserService(customOAuth2UserService)
-                )
-                .defaultSuccessUrl("/", true)
-                )
                 .logout(logout -> logout
                 .logoutUrl("/logout")
                 .logoutSuccessUrl("/login?logout=true")
@@ -121,6 +120,16 @@ public class SecurityConfig {
                 .exceptionHandling(exception -> exception
                 .accessDeniedPage("/acceso_denegado")
                 );
+
+        if (googleActivo) {
+            http.oauth2Login(oauth2 -> oauth2
+                    .loginPage("/login")
+                    .userInfoEndpoint(userInfo -> userInfo
+                    .oidcUserService(customOAuth2UserService.getObject())
+                    )
+                    .defaultSuccessUrl("/", true)
+            );
+        }
 
         return http.build();
     }

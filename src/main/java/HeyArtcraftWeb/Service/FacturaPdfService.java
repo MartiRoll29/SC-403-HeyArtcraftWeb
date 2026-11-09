@@ -78,7 +78,7 @@ public class FacturaPdfService {
 
         Usuario cliente = pedido.getUsuario();
         String nombreCliente = cliente == null
-                ? "-" : cliente.getNombre() + " " + cliente.getApellidos();
+                ? "-" : cliente.getNombre();
         String correoCliente = cliente == null ? "-" : cliente.getCorreo();
 
         tabla.addCell(celdaDato(texto("factura.numero"), "#" + pedido.getId()));

@@ -7,8 +7,8 @@ import HeyArtcraftWeb.Repository.ProductoRepository;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
@@ -19,19 +19,18 @@ public class ProductoService {
 
     private final ProductoRepository productoRepository;
     private final CategoriaRepository categoriaRepository;
-    private final FirebaseStorageService firebaseStorageService;
+    private final ObjectProvider<FirebaseStorageService> firebaseStorageService;
 
     public ProductoService(
             ProductoRepository productoRepository,
             CategoriaRepository categoriaRepository,
-            FirebaseStorageService firebaseStorageService) {
+            ObjectProvider<FirebaseStorageService> firebaseStorageService) {
 
         this.productoRepository = productoRepository;
         this.categoriaRepository = categoriaRepository;
         this.firebaseStorageService = firebaseStorageService;
     }
 
-    @Transactional
     public void save(Producto producto, MultipartFile imagenFile) {
 
         if (producto.getCategoria() == null
@@ -74,7 +73,7 @@ public class ProductoService {
         }
 
         String nuevaImagen
-                = firebaseStorageService.subirImagen(imagenFile);
+                = firebaseStorageService.getObject().subirImagen(imagenFile);
 
         producto.setImagen(nuevaImagen);
 
@@ -91,7 +90,6 @@ public class ProductoService {
         }
     }
 
-    @Transactional
     public void delete(Integer idProducto) {
 
         Producto producto = productoRepository.findById(idProducto)
@@ -105,25 +103,22 @@ public class ProductoService {
         }
     }
 
-    @Transactional(readOnly = true)
     public Producto getProducto(Integer id) {
         return productoRepository.findById(id).orElse(null);
     }
 
-    @Transactional(readOnly = true)
     public List<Producto> getProductos() {
         return productoRepository.findAll();
     }
 
     // HU-09: Visualizar productos destacados
-    @Transactional(readOnly = true)
     public List<Producto> getProductosDestacados() {
         return productoRepository.findByDestacadoTrue();
     }
 
     private void eliminarImagenSinInterrumpir(String imagenUrl) {
         try {
-            firebaseStorageService.eliminarImagen(imagenUrl);
+            firebaseStorageService.getObject().eliminarImagen(imagenUrl);
         } catch (RuntimeException e) {
             LOGGER.warn(
                     "No se pudo eliminar la imagen anterior de Firebase",

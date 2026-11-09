@@ -4,44 +4,48 @@ import HeyArtcraftWeb.Domain.Rol;
 import HeyArtcraftWeb.Domain.Usuario;
 import HeyArtcraftWeb.Repository.RolRepository;
 import HeyArtcraftWeb.Repository.UsuarioRepository;
+import HeyArtcraftWeb.Repository.UsuarioRolRepository;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class RegistroService {
 
     private final UsuarioRepository usuarioRepository;
     private final RolRepository rolRepository;
+    private final UsuarioRolRepository usuarioRolRepository;
     private final PasswordEncoder passwordEncoder;
-    private final CorreoService correoService;
+    private final ObjectProvider<CorreoService> correoService;
 
     public RegistroService(UsuarioRepository usuarioRepository,
             RolRepository rolRepository,
+            UsuarioRolRepository usuarioRolRepository,
             PasswordEncoder passwordEncoder,
-            CorreoService correoService) {
+            ObjectProvider<CorreoService> correoService) {
         this.usuarioRepository = usuarioRepository;
         this.rolRepository = rolRepository;
+        this.usuarioRolRepository = usuarioRolRepository;
         this.passwordEncoder = passwordEncoder;
         this.correoService = correoService;
     }
 
-    @Transactional
     public Usuario registrarNuevoUsuario(Usuario usuario) {
-        // Encriptar contraseña
-        usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
-
-        // Rol por defecto: CLIENTE
-        Rol rolCliente = rolRepository.findByRol("CLIENTE")
+        Rol rolCliente = rolRepository.buscarPorNombre("CLIENTE")
                 .orElseThrow(() -> new IllegalStateException("Rol CLIENTE no existe en BD"));
-        usuario.getRoles().add(rolCliente);
 
-        // Guardar usuario
-        Usuario guardado = usuarioRepository.save(usuario);
+        Integer idUsuario = usuarioRepository.insertar(
+                usuario.getNombre(),
+                usuario.getCorreo(),
+                passwordEncoder.encode(usuario.getPassword()));
+        usuario.setIdUsuario(idUsuario);
 
-        // Enviar correo de bienvenida
-        correoService.enviarBienvenida(usuario.getCorreo(), usuario.getNombre());
+        usuarioRolRepository.insertar(idUsuario, rolCliente.getIdRol());
 
-        return guardado;
+        // El correo de bienvenida solo se envía si el servicio está activo.
+        correoService.ifAvailable(correo
+                -> correo.enviarBienvenida(usuario.getCorreo(), usuario.getNombre()));
+
+        return usuario;
     }
 }

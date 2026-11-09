@@ -22,10 +22,12 @@ import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
+@ConditionalOnProperty(name = "app.firebase.enabled", havingValue = "true")
 public class FirebaseStorageService {
 
     private static final Set<String> TIPOS_PERMITIDOS
