@@ -37,3 +37,14 @@ build/
 **/*firebase-admin*.json
 **/*firebase-adminsdk*.json
 **/serviceAccountKey.json
+
+# SC-504: wallet de Oracle y secretos locales
+Wallet_*
+*.sso
+*.p12
+*.jks
+*.pem
+.env
+application-local.properties
+**/*credentials*.json
+**/*service-account*.json
